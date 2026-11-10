@@ -94,6 +94,8 @@ android {
 		androidFull {
 			java.srcDirs = ["src-google", "src-osmand", "src-nogplay"]
 			manifest.srcFile "AndroidManifest-androidFull.xml"
+			// Smooth Explorer branding: overrides upstream icons/splash by resource name
+			res.srcDir "res-smooth"
 		}
 		nightlyFree {
 			java.srcDirs = ["src-google", "src-osmand", "src-nogplay"]
