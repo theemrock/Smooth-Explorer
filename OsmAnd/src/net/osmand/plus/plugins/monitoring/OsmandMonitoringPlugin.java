@@ -101,8 +101,21 @@ public class OsmandMonitoringPlugin extends OsmandPlugin {
 
 	private void registerWidgetsVisibility() {
 		for (WidgetType widget : WidgetGroup.TRIP_RECORDING.getWidgets()) {
-			ApplicationMode[] appModes = widget == TRIP_RECORDING_DISTANCE ? null : new ApplicationMode[] {};
-			WidgetsAvailabilityHelper.regWidgetVisibility(widget, appModes);
+			// Smooth Explorer: no trip recording widget (REC) on the default map screen
+			WidgetsAvailabilityHelper.regWidgetVisibility(widget, new ApplicationMode[] {});
+		}
+	}
+
+	@Override
+	public boolean isEnableByDefault() {
+		return true;
+	}
+
+	/** Called when navigation stops: writes the track recorded automatically during navigation to a GPX file. */
+	public void saveTrackAfterNavigation() {
+		SavingTrackHelper helper = app.getSavingTrackHelper();
+		if (settings.SAVE_TRACK_TO_GPX.get() && !settings.SAVE_GLOBAL_TRACK_TO_GPX.get() && helper.hasDataToSave()) {
+			saveCurrentTrack(null, null, false, false);
 		}
 	}
 

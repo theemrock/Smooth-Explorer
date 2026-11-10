@@ -84,6 +84,7 @@ import net.osmand.plus.plugins.OsmandPlugin;
 import net.osmand.plus.plugins.PluginsHelper;
 import net.osmand.plus.plugins.accessibility.AccessibilityMode;
 import net.osmand.plus.plugins.accessibility.AccessibilityPlugin;
+import net.osmand.plus.plugins.monitoring.OsmandMonitoringPlugin;
 import net.osmand.plus.plugins.monitoring.SavingTrackHelper;
 import net.osmand.plus.plugins.monitoring.live.LiveMonitoringHelper;
 import net.osmand.plus.plugins.osmedit.oauth.OsmOAuthHelper;
@@ -895,6 +896,10 @@ public class OsmandApplication extends MultiDexApplication {
 	}
 
 	public void stopNavigation() {
+		OsmandMonitoringPlugin monitoringPlugin = PluginsHelper.getActivePlugin(OsmandMonitoringPlugin.class);
+		if (monitoringPlugin != null) {
+			monitoringPlugin.saveTrackAfterNavigation();
+		}
 		OsmAndLocationSimulation locationSimulation = locationProvider.getLocationSimulation();
 		if (locationSimulation.isRouteAnimating() || locationSimulation.isLoadingRouteLocations()) {
 			locationSimulation.stop();
