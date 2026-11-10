@@ -76,7 +76,8 @@ public class InAppPurchaseUtils {
 	}
 
 	private static boolean checkDeveloperBuildIfNeeded(@NonNull OsmandApplication app, boolean shouldCheck) {
-		return shouldCheck && Version.isDeveloperBuild(app);
+		// Smooth Explorer: personal build, unlock dev-build features
+		return shouldCheck;
 	}
 
 	public static boolean isSubscribedToAny(@NonNull OsmandApplication app) {
