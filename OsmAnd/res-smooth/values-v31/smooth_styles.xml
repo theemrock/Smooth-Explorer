@@ -2,7 +2,7 @@
 <resources>
     <style name="FirstSplashScreenPlus" parent="SplashScreenBaseTheme">
         <item name="android:windowBackground">@drawable/first_splash_screen_plus</item>
-        <item name="android:windowSplashScreenBackground">@color/smooth_ic_launcher_background</item>
+        <item name="android:windowSplashScreenBackground">@color/smooth_splash_background</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/smooth_ic_launcher_foreground</item>
     </style>
 </resources>
