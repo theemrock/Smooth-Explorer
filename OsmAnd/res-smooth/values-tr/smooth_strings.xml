@@ -27,4 +27,89 @@
     <string name="aidl_app_disabled_descr">Smooth Explorer bu uygulamadan gelen tüm istekleri yok sayar.</string>
     <string name="aidl_group_system_footer">Uygulamanın Smooth Explorer\'a dosya kopyalamasına, konumunuzu değiştirmesine, günlükleri okumasına ve uygulama görünümünü değiştirmesine izin verir. Yalnızca tamamen güvendiğiniz uygulamalar için açın.</string>
     <string name="free_versions_descr">Ücretsiz Smooth Explorer sürümünü indirin ve kurun</string>
+    <string name="prediction_time_description">Smooth Explorer\'da konum simgesi, her GPS güncellemesinde (saniyede bir kez) hareket eder. Özellikle hızlı hareket sırasında veya GPS sinyali kararsız olduğunda hafif bir gecikme meydana gelebilir.</string>
+    <string name="connect_obd_instructions_title">Smooth Explorer OBD-II tarayıcılarının Bluetooth bağlantılarını destekler.</string>
+    <string name="detailed_track_guidance_description">Smooth Explorer yakınlarınızdaki yolları geliştirilmiş adım adım yol rehberi için eşleştirecek.</string>
+    <string name="weather_data_sources_prompt">Smooth Explorer hava verisini iki kaynaktan sağlar:</string>
+    <string name="required_maps_calculate_online_summary">Eksik haritaların listesi düz çizgi rotasına dayanmaktadır. Doğru bir harita listesi elde etmek için Smooth Explorer rotanızı çevrimiçi olarak önceden hesaplayabilir.</string>
+    <string name="retrieve_elevation_data_summary">Smooth Explorer, yakındaki yollardan veya arazi haritalarından yükseklik verilerini alabilir.</string>
+    <string name="enable_to_use_external_input_device">Smooth Explorer ile harici giriş aygıtı kullanmayı etkinleştir</string>
+    <string name="ant_plus_searching_text_description">Lütfen aygıtı sensöre yakın tutun. Smooth Explorer\'ın onu bulabilmesi için sensörü etkinleştirmeniz gerekir.</string>
+    <string name="ant_plus_pair_bluetooth_prompt">Bluetooth LE ve ANT+ sensörlerini Smooth Explorer ile eşleştirebilirsiniz.</string>
+    <string name="rendering_engine_failed_descr">Smooth Explorer, \'Sürüm 1\' harita görselleştirmeye geri döndü. Ayarlar\'dan yeni \'Sürüm 2 (OpenGL)\' görselleştirme motoruna geri dönmeyi deneyebilirsiniz.
+\n
+\nLütfen hata günlüğünüzü sağlayarak iyileştirmeleri destekleyin.</string>
+    <string name="rendering_engine_failed">Smooth Explorer harita görselleştirme özelliği yakın zamanda çöktü.</string>
+    <string name="auto_backup_preference_desc">Varsayılan olarak Android, yeni cihaz veya yeniden kurulumda geri kurtarabilmek için favoriler, harita belirteçleri ve Smooth Explorer ayarları yedeklerini kaydeder. Bu yedekleme 25 MB ile sınırlıdır.
+\nOsmAnd Cloud kullandığınızda bu, yeniden kurulumdan sonra yanlış anlaşılmalara sebep olabilir.</string>
+    <string name="location_source_descr">Smooth Explorer\'ı Google Play\'den kurduğunuzda, konumu belirlemek için varsayılan olarak %1$s kullanılır. \n \nHatalı konum bilgisi alıyor veya cihazınızı %2$s olmadan kullanıyorsanız, \"%3$s\" kullanmayı deneyin.</string>
+    <string name="gps_filter_actions_description">Smooth Explorer, değişiklikleri dosyayı güncellemeden yola uygulayacaktır. Değişiklikleri el ile kaydedebilirsiniz.</string>
+    <string name="storage_migration_wrong_folder_warning">Seçilen klasörde Smooth Explorer verileri bulunamadı. Lütfen tekrar deneyin.</string>
+    <string name="shared_string_skip_warning">Taşıma işlemi atlansın mı\? Smooth Explorer artık paylaşılan depolama alanındaki dosyalarınıza erişemez.
+\n
+\nUygulama, yeni veri klasörünüzü kullanmaya başlayacaktır.</string>
+    <string name="shared_storage_third_step">Klasöre erişim izni verin. Bu izin olmadan Smooth Explorer dosyaları kopyalayamaz.</string>
+    <string name="shared_storage_migration_descr">Android depolama erişimindeki değişiklikler nedeniyle Smooth Explorer artık %1$s kullanamaz.
+\n
+\nTüm verilerinizi yeni klasöre kopyalayın.</string>
+    <string name="android_auto_purchase_request_title">Smooth Explorer\'ı Android Auto ile kullanmak için OsmAnd Pro veya Maps+ satın alın</string>
+    <string name="internal_app_storage_description">Tüm kullanıcılardan ve diğer uygulamalardan gizlenen dahili depolama, böylece yalnızca Smooth Explorer verilerinize erişebilir.</string>
+    <string name="purchases_feature_desc_android_auto">Smooth Explorer çevrim dışı haritalarını ve navigasyonunu aracınızın ekranına getirir ve aracınızın denetimleriyle bütünleşir.</string>
+    <string name="enough_contributions_descr">Tebrikler, OpenStreetMap\'e yeterince katkı sağladınız ve artık sınırsız Smooth Explorer harita güncellemesinin keyfini çıkarabilirsiniz!</string>
+    <string name="backup_deleting_all_data_descr">Lütfen Smooth Explorer verilerinizi buluttan silene kadar bekleyin. Aygıttaki tüm veriler dokunulmadan kalacak.</string>
+    <string name="purchases_feature_desc_osmand_cloud">Tüm Smooth Explorer verilerini çevrim içi depolamak için OsmAnd Cloud edinin. Yeniden kurduktan sonra veri kaybı yaşamayın. Tüm bilgileri kolayca yedekleyin ve geri yükleyin.</string>
+    <string name="srtm_download_list_help_message">Smooth Explorer, metre ve fit cinsinden eş yükselti eğrileri verileri sağlar. Biçimi değiştirmek için dosyayı yeniden indirmeniz gerekecek.</string>
+    <string name="trip_recording_logging_interval_info">Kayıt aralığı, Smooth Explorer\'ın geçerli konum verilerini isteyeceği zaman aralığını ayarlar.</string>
+    <string name="disable_recording_once_app_killed_descrp">Yol kaydı, uygulama (son uygulamalar aracılığıyla) kapatıldığında duraklatılacaktır. (Smooth Explorer arka plan göstergesi Android bildirim çubuğundan kaybolur.)</string>
+    <string name="speed_cameras_legal_descr">Bazı ülke veya bölgelerde hız kamerası uyarı uygulamalarının kullanımı yasalarca yasaklanmıştır.
+\n
+\nÜlkenizin yasalarına bağlı olarak bir seçim yapmanız gerekmektedir.
+\n
+\n%1$s seçeneğini seçtiğinizde hız kameraları hakkında ikaz ve uyarıları alırsınız.
+\n
+\n%2$s seçeneğini seçtiğinizde hız kameraları ile ilgili tüm veriler: uyarılar, bildirimler, POI\'ler Smooth Explorer tamamen yeniden kurulana kadar silinecektir.</string>
+    <string name="turn_screen_on_power_button_descr">Aygıtın güç düğmesine basmak, Smooth Explorer kilit ekranının üstünde olacak şekilde ekranı açacaktır.</string>
+    <string name="turn_screen_on_descr">Ekran uyandırma seçeneklerini seçin (aygıt kilitlenirken Smooth Explorer\'ın ön planda olduğundan emin olun):</string>
+    <string name="gpx_parse_error">GPX dosyası ile ilgili sorunlar bulundu.
+\n
+\nİncelemek için Smooth Explorer destek ile iletişime geçebilirsiniz.</string>
+    <string name="tracker_item">Smooth Explorer izleyici</string>
+    <string name="custom_osmand_plugin">Özel Smooth Explorer eklentisi</string>
+    <string name="checking_for_duplicate_description">Smooth Explorer, uygulamadaki mevcut ögelerle yinelenme durumu için %1$s\'i denetliyor. 
+\n 
+\nBu biraz zaman alabilir.</string>
+    <string name="listed_exist">Listelenen %1$s, Smooth Explorer\'da zaten var.</string>
+    <string name="import_duplicates_description">Smooth Explorer\'da içe aktarılanlarla aynı ada sahip ögeler zaten var.
+\n
+\nBir eylem seçin.</string>
+    <string name="tracks_view_descr">Kayıtlı yollarınız %1$s veya Smooth Explorer klasöründe.</string>
+    <string name="change_data_storage_full_description">Smooth Explorer veri dosyaları yeni hedefe taşınsın mı\?
+\n%1$s &gt; %2$s</string>
+    <string name="paste_Osmand_data_folder_path">Smooth Explorer verilerinin bulunduğu klasörün yolunu yapıştırın</string>
+    <string name="change_osmand_data_folder_question">Smooth Explorer veri klasörü değiştirilsin mi\?</string>
+    <string name="visited_screens_collect_descr">Smooth Explorer özellik popülerliğini anlamamıza yardımcı olur.</string>
+    <string name="profile_alert_cant_delete_base">Smooth Explorer\'ın temel profillerini silemezsiniz</string>
+    <string name="public_transport_no_route_title">Ne yazık ki, Smooth Explorer ayarlarınıza uygun bir rota bulamadı.</string>
+    <string name="wikivoyage_travel_guide_descr">İnternete bağlantısı olmadan, Smooth Explorer\'ın içinde, gezegendeki en ilgi çekici yerlere ait rehberler.</string>
+    <string name="measurement_tool_snap_to_road_descr">Smooth Explorer seçilmiş profil için rotalı noktalara bağlanacak.</string>
+    <string name="full_version_thanks">Smooth Explorer Premium satın aldığınız için teşekkür ederiz.</string>
+    <string name="share_history_subject">Smooth Explorer üzerinden paylaşıldı</string>
+    <string name="share_osm_edits_subject">Osmand üzerinden paylaşılan OSM düzenlemeler</string>
+    <string name="osmand_accessibility_description">Aygıtın erişilebilirlik özelliklerini doğrudan Smooth Explorer\'da kullanılabilir hale getirir. Örneğin; metinden konuşmaya sesleri için konuşma hızını ayarlama, D-pad navigasyonunu yapılandırma, yakınlaştırma denetimi için bir izleme topu kullanma veya örneğin konumunuzu otomatik olarak duyurmak için metinden konuşmaya geri bildirimi.</string>
+    <string name="osmand_development_plugin_description">Navigasyon simülasyonu, görselleştirme performansı veya sesli komutlar gibi geliştirme ve hata ayıklama özellikleri için ayarlar. Geliştiriciler için tasarlanmıştır, normal uygulama kullanımı için gerekli değildir.</string>
+    <string name="debugging_and_development">Smooth Explorer gelişimi</string>
+    <string name="calculate_osmand_route_without_internet">Smooth Explorer rota segmentinin çevrim dışı hesaplanması</string>
+    <string name="gpx_option_calculate_first_last_segment">Rotanın ilk ve son bölümleri için Smooth Explorer rotası hesapla</string>
+    <string name="android_19_location_disabled">Android 4.4\'ten (KitKat) sonra, eski depolama klasörü (%s) kullanımdan kaldırıldı. Tüm Smooth Explorer dosyaları yeni depolama konumuna kopyalansın mı\? 
+\n Not 1: Eski dosyalarınız dokunulmadan kalacaktır (ancak elle silinebilir). 
+\n Not 2: Yeni depolama konumunda Smooth Explorer ve OsmAnd+ arasında dosya paylaşımı mümkün olmayacaktır.</string>
+    <string name="copying_osmand_files">Kopyalama Osmand veri dosyaları …</string>
+    <string name="calculate_osmand_route_gpx">Çevrim dışı Smooth Explorer rota hesaplama</string>
+    <string name="osmand_extended_description_part4">Kayak yapma
+\n Smooth Explorer kayak haritaları eklentisi, kayak pistlerini karmaşıklık seviyesi ve asansörlerin ve diğer tesislerin konumu gibi bazı ek bilgileri ile birlikte görmenizi sağlar.</string>
+    <string name="install_selected_build">Smooth Explorer Yükle - {1} {2} üzerinden {0} MB \?</string>
+    <string name="hello">Smooth Explorer yolbul uygulaması</string>
+    <string name="previous_run_crashed">Son Smooth Explorer çalıştırması çöktü. Günlük kaydı dosyası {0} konumunda. Lütfen sorunu bildirin ve günlük kaydı dosyasını ekleyin.</string>
+    <string name="do_you_like_osmand">Smooth Explorer\'ı Sevdinizmi?</string>
+    <string name="quick_action_switch_day_night_descr">\'Gündüz\' ve \'Gece\' modu arasında değişiklik yapmak için bir geçiş.</string>
 </resources>

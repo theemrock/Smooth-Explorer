@@ -25,4 +25,78 @@
     <string name="aidl_app_disabled_descr">Smooth Explorer ignores all requests from this app.</string>
     <string name="aidl_group_system_footer">Lets the app copy files into Smooth Explorer, replace your location, read logs and change the app look. Turn on only for apps you fully trust.</string>
     <string name="free_versions_descr">Download and install free Smooth Explorer version</string>
+    <string name="free_region_email_helper">We\'ll send Smooth Explorer news. You can unsubscribe at any time.</string>
+    <string name="ais_set_your_mmsi_desc">Your own vessel may trigger constant warnings. Set your MMSI so Smooth Explorer can tell it apart from other ships.</string>
+    <string name="ais_receive_in_background">Receive AIS data even if Smooth Explorer is paused.</string>
+    <string name="prediction_time_description">Position icon in Smooth Explorer animates with each GPS update (once per second). A slight delay may occur, particularly during rapid movement or when the GPS signal is unstable.</string>
+    <string name="connect_obd_instructions_title">Smooth Explorer supports Bluetooth connections to OBD-II scanners.</string>
+    <string name="detailed_track_guidance_description">Smooth Explorer will match your track to nearby roads for enhanced turn-by-turn guidance.</string>
+    <string name="weather_data_sources_prompt">Smooth Explorer provides weather data from two sources:</string>
+    <string name="required_maps_calculate_online_summary">The list of missing maps is based on the straight line route. To get an accurate list of maps, Smooth Explorer can pre-calculate your route online.</string>
+    <string name="retrieve_elevation_data_summary">Smooth Explorer can retrieve elevation data from nearby roads or terrain maps.</string>
+    <string name="enable_to_use_external_input_device">Enable to use external input device with Smooth Explorer</string>
+    <string name="ant_plus_searching_text_description">Please hold the device close to the sensor.
+You need to activate the sensor so Smooth Explorer can find it.</string>
+    <string name="ant_plus_pair_bluetooth_prompt">You can pair Bluetooth LE and ANT+ sensors with Smooth Explorer.</string>
+    <string name="rendering_engine_failed_descr">Smooth Explorer has reverted to \'Version 1\' map rendering. You can try to switch back to the new \'Version 2 (OpenGL)\' rendering engine in the Settings.\n\nPlease support improvements by providing your error log.</string>
+    <string name="rendering_engine_failed">Smooth Explorer\'s map rendering has recently crashed.</string>
+    <string name="auto_backup_preference_desc">By default, Android saves backups of favorites, map tokens, and Smooth Explorer settings to restore them on new devices or after reinstallation. This backup is limited to 25 MB.\nWhen using OsmAnd Cloud, this can lead to misunderstandings after reinstallation.</string>
+    <string name="location_source_descr">By default, Smooth Explorer installed from Google Play uses %1$s to determine location.\n\nIf you get inaccurate location information or using device without %2$s, try to switch to \"%3$s\"</string>
+    <string name="gps_filter_actions_description">Smooth Explorer will apply the changes to the track without updating the file. You can save changes manually.</string>
+    <string name="storage_migration_wrong_folder_warning">No Smooth Explorer data found in the selected folder. Please try again.</string>
+    <string name="shared_string_skip_warning">Skip the migration? Smooth Explorer no longer has access to your files in shared storage.\n\nThe app will start using your new data folder.</string>
+    <string name="shared_storage_third_step">Grant permission to access the folder. Without it Smooth Explorer cannot copy files.</string>
+    <string name="shared_storage_migration_descr">Due to changes in Android storage access, Smooth Explorer can no longer use %1$s.\n\nCopy all your data to the new folder.</string>
+    <string name="android_auto_purchase_request_title">Purchase OsmAnd Pro or Maps+ to use Smooth Explorer with Android Auto</string>
+    <string name="internal_app_storage_description">Internal storage, hidden from all users and other apps, so only Smooth Explorer can access your data.</string>
+    <string name="purchases_feature_desc_android_auto">Brings Smooth Explorer offline maps and navigation to your vehicle screen and integrates with your vehicle\'s controls.</string>
+    <string name="enough_contributions_descr">Congratulations, you have provided enough OpenStreetMap contributions and can now enjoy unlimited Smooth Explorer map updates!</string>
+    <string name="backup_deleting_all_data_descr">Please wait until Smooth Explorer deletes your data from the cloud. All data on the device will remain untouched.</string>
+    <string name="purchases_feature_desc_osmand_cloud">Get OsmAnd Cloud to store all Smooth Explorer data online. No lost data after reinstalling. Back up and restore all info easily.</string>
+    <string name="srtm_download_list_help_message">Smooth Explorer provides contour line data in meters and feet. You will need to re-download the file to change the format.</string>
+    <string name="trip_recording_logging_interval_info">The logging interval sets the time period in which Smooth Explorer will request the current position data.</string>
+    <string name="disable_recording_once_app_killed_descrp">Track logging will pause when the app is killed (via recent apps). (The Smooth Explorer background indication disappears from the Android notification bar.)</string>
+    <string name="speed_cameras_legal_descr">In some countries or regions, the use of speed camera warning apps is prohibited by law.
+        \n\nYou need to make a choice depending on the law of your country.
+        \n\nSelect %1$s and you will receive alerts and warnings about speed cameras.
+        \n\nSelect %2$s. All data related to speed cameras: alerts, notifications, POIs will be deleted until Smooth Explorer is completely reinstalled.</string>
+    <string name="turn_screen_on_power_button_descr">Pressing the device power button will turn the screen on with Smooth Explorer on top of the lock screen.</string>
+    <string name="turn_screen_on_descr">Select screen wake-up options (make sure Smooth Explorer is in the foreground when the device is being locked):</string>
+    <string name="gpx_parse_error">Issues found with a GPX file.\n\nYou may contact Smooth Explorer support to investigate.</string>
+    <string name="tracker_item">Smooth Explorer tracker</string>
+    <string name="custom_osmand_plugin">Custom Smooth Explorer plugin</string>
+    <string name="checking_for_duplicate_description">Smooth Explorer check %1$s for duplicates with existing items in the app.\n\nIt may take some time.</string>
+    <string name="listed_exist">Listed %1$s, already exist in Smooth Explorer.</string>
+    <string name="import_duplicates_description">Smooth Explorer already has elements with the same names as those imported.\n\nSelect an action.</string>
+    <string name="tracks_view_descr">Your recorded tracks are in %1$s, or the Smooth Explorer folder.</string>
+    <string name="change_data_storage_full_description">Move Smooth Explorer data files to the new destination?\n%1$s > %2$s</string>
+    <string name="paste_Osmand_data_folder_path">Paste path to the folder with Smooth Explorer data</string>
+    <string name="change_osmand_data_folder_question">Change Smooth Explorer data folder?</string>
+    <string name="visited_screens_collect_descr">Helps us understand Smooth Explorer feature popularity.</string>
+    <string name="profile_alert_cant_delete_base">You cannot delete Smooth Explorer\'s base profiles</string>
+    <string name="public_transport_no_route_title">Unfortunately, Smooth Explorer could not find a route suitable for your settings.</string>
+    <string name="wikivoyage_travel_guide_descr">Guides to the most interesting places on the planet, inside Smooth Explorer, without a connection to the Internet.</string>
+    <string name="measurement_tool_snap_to_road_descr">Smooth Explorer will connect the points with routes for the selected profile.</string>
+    <string name="full_version_thanks">Thank you for purchasing the paid version of Smooth Explorer.</string>
+    <string name="share_history_subject"> shared via Smooth Explorer</string>
+    <string name="share_osm_edits_subject">OSM edits shared via Smooth Explorer</string>
+    <string name="osmand_accessibility_description">Makes the device\'s accessibility features directly available in Smooth Explorer. This facilitates e.g. adjusting the speech rate for text-to-speech voices, configuring D-pad navigation, using a trackball for zoom control, or text-to-speech feedback, for example to auto-announce your position.</string>
+    <string name="osmand_development_plugin_description">Provides functionality to test and debug Smooth Explorer: simulate navigation routes, monitor the screen rendering, check performance, etc. This plugin is not required for normal app use.</string>
+    <string name="debugging_and_development">Smooth Explorer development</string>
+    <string name="calculate_osmand_route_without_internet">Offline calculation of Smooth Explorer route segment</string>
+    <string name="gpx_option_calculate_first_last_segment">Calculate Smooth Explorer route for first and last route segment</string>
+    <string name="android_19_location_disabled">On Android 4.4 (KitKat) onwards, the old storage folder (%s) is deprecated. Copy all Smooth Explorer files to new storage location?\n
+    Note 1: Your old files will remain untouched (but can be deleted manually).\n
+    Note 2: In the new storage location it will not be possible to share files between Smooth Explorer and OsmAnd+.</string>
+    <string name="copying_osmand_files">Copying Smooth Explorer data files…</string>
+    <string name="calculate_osmand_route_gpx">Offline Smooth Explorer route calculation</string>
+    <string name="osmand_extended_description_part4">
+        Skiing\n
+        Smooth Explorer ski maps plugin enables you to see ski tracks with level of complexity and some additional info, like location of lifts and other facilities.
+    </string>
+    <string name="install_selected_build">Install Smooth Explorer - {0} of {1} {2} MB ?</string>
+    <string name="hello">Smooth Explorer navigation app</string>
+    <string name="previous_run_crashed">Last Smooth Explorer run crashed. Log file is at {0}. Please report the issue and attach the log file.</string>
+    <string name="do_you_like_osmand">Do you like Smooth Explorer?</string>
+    <string name="quick_action_switch_day_night_descr">A toggle to switch between day and night modes for Smooth Explorer.</string>
 </resources>

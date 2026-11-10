@@ -44,7 +44,7 @@ class FlyoverOverlay {
 	static final String COMPASS = "compass";
 
 	// short form of the attribution the OSM licence asks for, with the app that drew the map
-	private static final String ATTRIBUTION = "OsmAnd · © OpenStreetMap";
+	private static final String ATTRIBUTION = "© OpenStreetMap";
 	private static final float MARGIN_DP = 12;
 	private static final float BUTTON_DP = 44;
 	private static final float RULER_MAX_DP = 120;
