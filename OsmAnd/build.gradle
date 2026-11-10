@@ -126,8 +126,8 @@ android {
 		}
 		androidFull {
 			dimension "version"
-			applicationId "net.osmand.plus"
-			resValue "string", "app_name", "OsmAnd~"
+			applicationId "com.theemrock.smoothexplorer"
+			resValue "string", "app_name", "Smooth Explorer"
 			resValue "string", "app_edition", System.getenv("APP_EDITION") ? System.getenv("APP_EDITION") : ""
 		}
 		gplayFree {
