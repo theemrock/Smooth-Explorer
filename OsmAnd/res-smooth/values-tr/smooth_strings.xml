@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="first_usage_wizard_desc">Smooth Explorer\'ın konumunuzu bulmasına ve o bölge için harita indirmeyi önermesine izin verin.</string>
+    <string name="location_access_request_title">Smooth Explorer\'ın gezinmek için konum iznine ihtiyacı var.</string>
+    <string name="ask_for_location_permission">Lütfen devam etmek için Smooth Explorer\'a konum erişim izni verin.</string>
+    <string name="missing_write_external_storage_permission">Smooth Explorer hafıza kartını kullanma iznine sahip değil</string>
+    <string name="osmand_service_descr">Smooth Explorer, ekran kapalıyken arka planda çalışır.</string>
+    <string name="process_navigation_service">Smooth Explorer yolbul hizmeti</string>
+    <string name="process_downloading_service">Smooth Explorer indirme hizmeti</string>
+    <string name="osmand_settings">Smooth Explorer ayarları</string>
+    <string name="profile_type_osmand_string">Smooth Explorer profili</string>
+    <string name="app_name_osmand">Smooth Explorer</string>
+    <string name="about_osmand">Smooth Explorer hakkında</string>
+    <string name="help_us_make_osmand_better">Smooth Explorer\'ı daha iyi hale getirmemize yardımcı olun</string>
+    <string name="make_osmand_better_descr">Smooth Explorer\'ın anonim uygulama kullanım verilerini toplamasına ve işlemesine izin ver. Konumunuz veya haritada görüntülediğiniz yerler hakkında veri toplanmaz.
+\n
+\n\'Ayarlar\' → \'Gizlilik ve Güvenlik\' bölümünde istediğiniz zaman yapılandırın.</string>
+    <string name="empty_tracks_description">Smooth Explorer ile yol dosyalarınızı içe aktarabilir, oluşturabilir veya kaydedebilirsiniz.</string>
+    <string name="shared_string_import2osmand">Smooth Explorer\'a aktar</string>
+    <string name="import_gpx_failed_descr">Dosya içe aktarılamadı. Lütfen Smooth Explorer\'ın okuma iznine sahip olduğundan emin olun.</string>
+    <string name="share_route_subject">Smooth Explorer aracılığıyla paylaşılan rota</string>
+    <string name="share_fav_subject">Smooth Explorer aracılığıyla paylaşılan Favoriler</string>
+    <string name="last_launch_crashed">Smooth Explorer\'ın son çalıştırması çöktü. Lütfen hata mesajını paylaşarak Smooth Explorer\'ı geliştirmemize yardımcı olun.</string>
+    <string name="shared_string_osmand_usage">Smooth Explorer kullanımı</string>
+</resources>

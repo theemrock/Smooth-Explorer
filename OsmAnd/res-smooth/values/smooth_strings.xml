@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="first_usage_wizard_desc">Let Smooth Explorer determine your location and suggest maps to download for that region.</string>
+    <string name="location_access_request_title">Smooth Explorer needs Location permission to navigate.</string>
+    <string name="ask_for_location_permission">Please grant Smooth Explorer location access to continue.</string>
+    <string name="missing_write_external_storage_permission">Smooth Explorer lacks permission to use the memory card</string>
+    <string name="osmand_service_descr">Smooth Explorer runs in the background with the screen off.</string>
+    <string name="process_navigation_service">Smooth Explorer navigation service</string>
+    <string name="process_downloading_service">Smooth Explorer downloading service</string>
+    <string name="osmand_settings">Smooth Explorer settings</string>
+    <string name="profile_type_osmand_string">Smooth Explorer profile</string>
+    <string name="app_name_osmand">Smooth Explorer</string>
+    <string name="about_osmand">About Smooth Explorer</string>
+    <string name="help_us_make_osmand_better">Help us make Smooth Explorer better</string>
+    <string name="make_osmand_better_descr">Allow Smooth Explorer to collect and process anonymous app usage data. No data about your position or locations you view on the map are collected.\n\nConfigure any time in \'Settings\' → \'Privacy and Security\'.</string>
+    <string name="empty_tracks_description">You can import, create, or record track files using Smooth Explorer.</string>
+    <string name="shared_string_import2osmand">Import to Smooth Explorer</string>
+    <string name="import_gpx_failed_descr">Could not import file. Please ensure Smooth Explorer has permission to read it.</string>
+    <string name="share_route_subject">Route shared via Smooth Explorer</string>
+    <string name="share_fav_subject">Favorites shared via Smooth Explorer</string>
+    <string name="last_launch_crashed">Last Smooth Explorer run crashed. Please help us improve Smooth Explorer by sharing the error message.</string>
+    <string name="shared_string_osmand_usage">Smooth Explorer usage</string>
+</resources>
