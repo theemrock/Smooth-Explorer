@@ -20,4 +20,9 @@
     <string name="share_fav_subject">Favorites shared via Smooth Explorer</string>
     <string name="last_launch_crashed">Last Smooth Explorer run crashed. Please help us improve Smooth Explorer by sharing the error message.</string>
     <string name="shared_string_osmand_usage">Smooth Explorer usage</string>
+    <string name="aidl_permissions_request_title">Allow %1$s to use Smooth Explorer?</string>
+    <string name="aidl_permissions_descr">What %1$s (%2$s) can do in Smooth Explorer.</string>
+    <string name="aidl_app_disabled_descr">Smooth Explorer ignores all requests from this app.</string>
+    <string name="aidl_group_system_footer">Lets the app copy files into Smooth Explorer, replace your location, read logs and change the app look. Turn on only for apps you fully trust.</string>
+    <string name="free_versions_descr">Download and install free Smooth Explorer version</string>
 </resources>

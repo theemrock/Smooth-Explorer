@@ -22,4 +22,9 @@
     <string name="share_fav_subject">Smooth Explorer aracılığıyla paylaşılan Favoriler</string>
     <string name="last_launch_crashed">Smooth Explorer\'ın son çalıştırması çöktü. Lütfen hata mesajını paylaşarak Smooth Explorer\'ı geliştirmemize yardımcı olun.</string>
     <string name="shared_string_osmand_usage">Smooth Explorer kullanımı</string>
+    <string name="aidl_permissions_request_title">%1$s uygulamasının Smooth Explorer\'ı kullanmasına izin verilsin mi?</string>
+    <string name="aidl_permissions_descr">%1$s (%2$s) uygulamasının Smooth Explorer\'da yapabilecekleri.</string>
+    <string name="aidl_app_disabled_descr">Smooth Explorer bu uygulamadan gelen tüm istekleri yok sayar.</string>
+    <string name="aidl_group_system_footer">Uygulamanın Smooth Explorer\'a dosya kopyalamasına, konumunuzu değiştirmesine, günlükleri okumasına ve uygulama görünümünü değiştirmesine izin verir. Yalnızca tamamen güvendiğiniz uygulamalar için açın.</string>
+    <string name="free_versions_descr">Ücretsiz Smooth Explorer sürümünü indirin ve kurun</string>
 </resources>
