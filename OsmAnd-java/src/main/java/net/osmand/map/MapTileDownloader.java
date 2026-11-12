@@ -286,6 +286,9 @@ public class MapTileDownloader {
 
 	/** URLs may carry an API key (TomTom): log only the masked form. */
 	private static String safeUrl(String url) {
+		if (TomTomTrafficTileSource.isTrafficUrl(url)) {
+			return "[tomtom traffic tile]"; // no URL at all in the log, not even masked
+		}
 		return TomTomRoutesProtocol.maskKey(String.valueOf(url));
 	}
 

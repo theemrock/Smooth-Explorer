@@ -79,7 +79,8 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 	private static final float ZORDER_UNDERLAY = -0.5f;
 	private static final float ZORDER_OVERLAY = 0.7f;
 
-	private static final float ZORDER_TRAFFIC = 0.8f;
+	// the renderer numbers map layers as zOrder * 100, so this must not equal another layer (weather uses 0.8-0.82)
+	private static final float ZORDER_TRAFFIC = 0.75f;
 	private static final String SMOOTH_TRAFFIC_ITEM_ID = "smooth_traffic";
 
 	private final OsmandSettings settings;
@@ -87,7 +88,8 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 	private final CommonPreference<Boolean> smoothTraffic;
 
 	private TomTomTrafficTileSource trafficSource;
-	private TomTomTrafficLayer trafficLayer;
+	private MapTileLayer trafficLayer;
+	private TomTomCreditLayer creditLayer;
 	private MapTileLayer overlayLayer;
 	private MapTileLayer underlayLayer;
 	private StateChangedListener<String> underlayListener;
@@ -238,7 +240,8 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 		TomTomKeyStore keyStore = new TomTomKeyStore(app);
 		TomTomTrafficTileSource source = getTrafficSource(keyStore);
 		if (trafficLayer == null) {
-			trafficLayer = new TomTomTrafficLayer(context, source, keyStore, () -> app.runInUIThread(() -> {
+			trafficLayer = new MapTileLayer(context, false);
+			creditLayer = new TomTomCreditLayer(context, source, keyStore, () -> app.runInUIThread(() -> {
 				if (smoothTraffic.get()) {
 					smoothTraffic.set(false);
 					app.showToastMessage(R.string.smooth_traffic_quota_reached);
@@ -251,11 +254,15 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 			if (!mapView.isLayerExists(trafficLayer)) {
 				mapView.addLayer(trafficLayer, ZORDER_TRAFFIC);
 			}
+			if (!mapView.isLayerExists(creditLayer)) {
+				mapView.addLayer(creditLayer, ZORDER_TRAFFIC);
+			}
 			if (trafficLayer.getMap() != source) {
 				trafficLayer.setMap(source);
 			}
 		} else if (mapView.isLayerExists(trafficLayer)) {
 			mapView.removeLayer(trafficLayer);
+			mapView.removeLayer(creditLayer);
 			trafficLayer.setMap(null);
 		}
 		mapView.refreshMap();

@@ -9,14 +9,15 @@ import androidx.annotation.NonNull;
 import net.osmand.data.RotatedTileBox;
 import net.osmand.plus.R;
 import net.osmand.plus.onlinerouting.engine.TomTomKeyStore;
-import net.osmand.plus.views.layers.MapTileLayer;
+import net.osmand.plus.views.layers.base.OsmandMapLayer;
 import net.osmand.smooth.routes.TomTomTrafficTileSource;
 
 /**
- * TomTom traffic flow overlay: a normal MapTileLayer fed by {@link TomTomTrafficTileSource}, plus the
- * "© TomTom" credit, which is drawn for as long as the layer shows traffic.
+ * Draws the "© TomTom" credit for as long as the traffic overlay is on, and turns the overlay off when the
+ * monthly cap is used up. It is a separate screen-pixel layer because the tile layer itself must be a normal
+ * (map-space) layer: the map only asks those for their tile provider.
  */
-public class TomTomTrafficLayer extends MapTileLayer {
+public class TomTomCreditLayer extends OsmandMapLayer {
 
 	private static final long KEY_RECHECK_MS = 5000;
 
@@ -30,9 +31,9 @@ public class TomTomTrafficLayer extends MapTileLayer {
 	private long keyCheckedAt;
 	private boolean hasKey;
 
-	public TomTomTrafficLayer(@NonNull Context context, @NonNull TomTomTrafficTileSource source,
-	                          @NonNull TomTomKeyStore keyStore, @NonNull Runnable onLimitReached) {
-		super(context, false);
+	public TomTomCreditLayer(@NonNull Context context, @NonNull TomTomTrafficTileSource source,
+	                         @NonNull TomTomKeyStore keyStore, @NonNull Runnable onLimitReached) {
+		super(context);
 		this.source = source;
 		this.keyStore = keyStore;
 		this.onLimitReached = onLimitReached;
@@ -49,10 +50,12 @@ public class TomTomTrafficLayer extends MapTileLayer {
 	}
 
 	@Override
+	public boolean drawInScreenPixels() {
+		return true;
+	}
+
+	@Override
 	public void onDraw(Canvas canvas, RotatedTileBox tileBox, DrawSettings drawSettings) {
-		if (getMap() == null || !isVisible()) {
-			return;
-		}
 		long now = System.currentTimeMillis();
 		if (now - keyCheckedAt > KEY_RECHECK_MS) {
 			hasKey = keyStore.isSet(); // keystore read: not on every frame
@@ -65,8 +68,9 @@ public class TomTomTrafficLayer extends MapTileLayer {
 			onLimitReached.run();
 			return;
 		}
-		float x = canvas.getWidth() - pad;
-		float y = canvas.getHeight() - pad;
+		// bottom row: ruler on the left of centre, zoom buttons on the right, so the gap between them is free
+		float x = canvas.getWidth() * 0.66f;
+		float y = canvas.getHeight() - 3 * pad;
 		canvas.drawText(credit, x, y, outlinePaint);
 		canvas.drawText(credit, x, y, textPaint);
 	}
