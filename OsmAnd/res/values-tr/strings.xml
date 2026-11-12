@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="smooth_routes_quota_reached">TomTom aylık istek sınırı doldu. Çevrimdışı rota kullanılıyor.</string>
+    <string name="smooth_routes_rate_limited">TomTom şu an yoğun (çok fazla istek). Çevrimdışı rota kullanılıyor.</string>
     <string name="release_5_0">
     • Yeni Keşfet moduyla en beğenilen İÇN\'leri (POI) keşfedin\n\n
     • Tüm OSM rotaları artık aranabilir! Yürüyüş, bisiklet, MTB ve daha fazlası\n\n

@@ -4,12 +4,15 @@ import androidx.annotation.NonNull;
 
 import net.osmand.util.Algorithms;
 
+import java.util.Arrays;
+
 public class EngineType {
 
 	public static final OnlineRoutingEngine GRAPHHOPPER_TYPE = new GraphhopperEngine(null);
 	public static final OnlineRoutingEngine OSRM_TYPE = new OsrmEngine(null);
 	public static final OnlineRoutingEngine ORS_TYPE = new OrsEngine(null);
 	public static final OnlineRoutingEngine GPX_TYPE = new GpxEngine(null);
+	public static final OnlineRoutingEngine TOMTOM_TYPE = new TomTomRoutesEngine(null);
 
 	private static OnlineRoutingEngine[] enginesTypes;
 
@@ -21,6 +24,11 @@ public class EngineType {
 					ORS_TYPE,
 					GPX_TYPE
 			};
+		}
+		if (TomTomRoutesEngine.isAvailable()) { // no API key in the build: engine is not selectable
+			OnlineRoutingEngine[] withTomTom = Arrays.copyOf(enginesTypes, enginesTypes.length + 1);
+			withTomTom[enginesTypes.length] = TOMTOM_TYPE;
+			return withTomTom;
 		}
 		return enginesTypes;
 	}

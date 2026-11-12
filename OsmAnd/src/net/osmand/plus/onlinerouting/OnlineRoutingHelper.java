@@ -134,7 +134,7 @@ public class OnlineRoutingHelper {
 							  @Nullable String body, @Nullable Map<String, String> headers)
 			throws IOException {
 		long tm = System.currentTimeMillis();
-		LOG.info("Calling online routing: " + url);
+		LOG.info("Calling online routing: " + url.replaceAll("([?&]key=)[^&]*", "$1***")); // never log API keys
 		HttpURLConnection connection = NetworkUtils.getHttpURLConnection(url);
 		connection.setRequestProperty("User-Agent", Version.getFullVersion(app));
 		connection.setRequestMethod(method);

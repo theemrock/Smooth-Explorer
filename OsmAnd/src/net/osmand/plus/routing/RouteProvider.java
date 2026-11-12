@@ -793,7 +793,14 @@ public class RouteProvider {
 				builder.setCalculatedRouteTimeSpeed(response.hasCalculatedTimeSpeed());
 				params.gpxFile = response.getGpxFile();
 				params.gpxRoute = builder.build(app);
-				return gpxRouteHelper.calculateGpxRoute(params);
+				RouteCalculationResult calculated = gpxRouteHelper.calculateGpxRoute(params);
+				OnlineRoutingEngine onlineEngine = helper.getEngineByKey(engineKey);
+				if (onlineEngine instanceof net.osmand.plus.onlinerouting.engine.TomTomRoutesEngine) {
+					((net.osmand.plus.onlinerouting.engine.TomTomRoutesEngine) onlineEngine).applyTravelTime(calculated);
+					android.util.Log.i("SmoothRoutes", "osmand distance_m=" + calculated.getWholeDistance()
+							+ " time_s=" + calculated.getLeftTime(null));
+				}
+				return calculated;
 			}
 			List<Location> route = response.getRoute();
 			List<RouteDirectionInfo> directions = response.getDirections();

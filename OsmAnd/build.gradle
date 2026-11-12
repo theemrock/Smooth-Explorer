@@ -22,6 +22,14 @@ apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 //        </unzip>
 // Less important
 
+def smoothTomTomApiKey() {
+	def f = rootProject.file("local.properties")
+	if (!f.exists()) return ""
+	def props = new Properties()
+	f.withInputStream { props.load(it) }
+	return props.getProperty("smooth.tomtomApiKey", "").trim()
+}
+
 android {
 	signingConfigs {
 		development {
@@ -50,6 +58,8 @@ android {
 	}
 
 	defaultConfig {
+		// Smooth Explorer: TomTom Routing key; empty unless the androidFull flavor reads it from local.properties
+		buildConfigField "String", "TOMTOM_API_KEY", '""'
 		minSdkVersion osmand_minSdk
 		versionCode 5550
 		versionCode System.getenv("APK_NUMBER_VERSION") ? System.getenv("APK_NUMBER_VERSION").toInteger() : versionCode
@@ -129,6 +139,7 @@ android {
 		androidFull {
 			dimension "version"
 			applicationId "com.theemrock.smoothexplorer"
+			buildConfigField "String", "TOMTOM_API_KEY", "\"" + smoothTomTomApiKey() + "\""
 			resValue "string", "app_name", "Smooth Explorer"
 			// UI languages only; voice (TTS) data and map labels are not Android string resources
 			resourceConfigurations += ["en", "tr"]
