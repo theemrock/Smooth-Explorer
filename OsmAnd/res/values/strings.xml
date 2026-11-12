@@ -12,6 +12,9 @@
 	Thx - Hardy
 -->
 	<string name="smooth_routes_quota_reached">TomTom monthly request limit reached. Using offline routing.</string>
+	<string name="smooth_tomtom_key_label">TomTom API key (stored encrypted; leave empty and save to delete)</string>
+	<string name="smooth_tomtom_key_missing">TomTom API key is not set. Using offline routing.</string>
+	<string name="smooth_tomtom_key_save_failed">Could not store the API key securely.</string>
 	<string name="smooth_routes_rate_limited">TomTom is busy (too many requests). Using offline routing.</string>
 	<string name="update_maps_to_use_new_search">Update maps to use the new search (%1$s)</string>
 	<string name="free_region_not_chosen_descr">The region of your first downloaded map becomes your free region.</string>

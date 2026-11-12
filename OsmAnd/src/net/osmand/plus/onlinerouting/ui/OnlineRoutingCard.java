@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.text.InputType;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -202,6 +203,12 @@ public class OnlineRoutingCard extends MapBaseCard {
 		editText.setText(text);
 		editText.setTag(null);
 		editText.setEnabled(enabled);
+	}
+
+	/** Hides the typed text (dots) and keeps paste working; used for secrets such as the TomTom API key. */
+	public void setPasswordMode(boolean enabled) {
+		editText.setInputType(InputType.TYPE_CLASS_TEXT
+				| (enabled ? InputType.TYPE_TEXT_VARIATION_PASSWORD : InputType.TYPE_TEXT_VARIATION_NORMAL));
 	}
 
 	@NonNull

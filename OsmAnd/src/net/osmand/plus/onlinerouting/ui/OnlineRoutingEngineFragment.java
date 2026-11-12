@@ -38,6 +38,9 @@ import net.osmand.plus.onlinerouting.OnlineRoutingUtils;
 import net.osmand.plus.onlinerouting.VehicleType;
 import net.osmand.plus.onlinerouting.engine.EngineType;
 import net.osmand.plus.onlinerouting.engine.OnlineRoutingEngine;
+import net.osmand.plus.onlinerouting.engine.TomTomKeyStore;
+import net.osmand.plus.onlinerouting.engine.TomTomRoutesEngine;
+import net.osmand.smooth.routes.TomTomRoutesProtocol;
 import net.osmand.plus.profiles.SelectOnlineApproxProfileBottomSheet;
 import net.osmand.plus.routepreparationmenu.cards.BaseCard;
 import net.osmand.plus.settings.backend.ApplicationMode;
@@ -79,6 +82,7 @@ public class OnlineRoutingEngineFragment extends BaseFullScreenFragment implemen
 	private OnlineRoutingCard typeCard;
 	private OnlineRoutingCard vehicleCard;
 	private OnlineRoutingCard apiKeyCard;
+	private String pendingTomTomKey; // null = untouched, blank = clear the stored key
 	private OnlineRoutingCard approximateCard;
 	private OnlineRoutingCard useExternalTimestampsCard;
 	private OnlineRoutingCard routingFallbackCard;
@@ -328,8 +332,12 @@ public class OnlineRoutingEngineFragment extends BaseFullScreenFragment implemen
 			apiKeyCard.setEditedText(apiKey);
 		}
 		apiKeyCard.showDivider();
+		TomTomRoutesEngine.attach(app);
 		apiKeyCard.setOnTextChangedListener((editedByUser, text) -> {
-			if (Algorithms.isBlank(text)) {
+			if (engine instanceof TomTomRoutesEngine) {
+				// the TomTom key never enters the engine params (they are exported); it goes to TomTomKeyStore on save
+				pendingTomTomKey = text;
+			} else if (Algorithms.isBlank(text)) {
 				engine.remove(EngineParameter.API_KEY);
 			} else {
 				engine.put(EngineParameter.API_KEY, text);
@@ -445,6 +453,12 @@ public class OnlineRoutingEngineFragment extends BaseFullScreenFragment implemen
 
 	private void onSaveEngine() {
 		if (engine != null) {
+			if (engine instanceof TomTomRoutesEngine) {
+				engine.remove(EngineParameter.API_KEY);
+				if (pendingTomTomKey != null && !new TomTomKeyStore(app).set(pendingTomTomKey)) {
+					app.showToastMessage(R.string.smooth_tomtom_key_save_failed);
+				}
+			}
 			helper.saveEngine(engine);
 		}
 	}
@@ -474,7 +488,9 @@ public class OnlineRoutingEngineFragment extends BaseFullScreenFragment implemen
 		List<LatLon> path = new ArrayList<>();
 		path.add(selectedLocation.getCityCenterLatLon());
 		path.add(selectedLocation.getCityAirportLatLon());
-		return engine.getFullUrl(path, 0f);
+		String url = engine.getFullUrl(path, 0f);
+		// never show the API key on screen: the test button restores it from the key store
+		return engine instanceof TomTomRoutesEngine ? TomTomRoutesProtocol.maskKey(url) : url;
 	}
 
 	private void testEngineWork() {
@@ -489,7 +505,11 @@ public class OnlineRoutingEngineFragment extends BaseFullScreenFragment implemen
 						location.getCityCenterLatLon());
 				String body = engine.getRequestBody(path, null);
 				Map<String, String> headers = engine.getRequestHeaders();
-				String response = helper.makeRequest(exampleCard.getEditedText(), method, body, headers);
+				String testUrl = exampleCard.getEditedText();
+				if (requestedEngine instanceof TomTomRoutesEngine) {
+					testUrl = TomTomRoutesEngine.revealKey(testUrl);
+				}
+				String response = helper.makeRequest(testUrl, method, body, headers);
 				resultOk = requestedEngine.isResultOk(errorMessage, response);
 			} catch (IOException | JSONException e) {
 				errorMessage.append(e);
@@ -531,6 +551,9 @@ public class OnlineRoutingEngineFragment extends BaseFullScreenFragment implemen
 				typeCard.setHeaderSubtitle(engine.getType().getTitle());
 				typeCard.setEditedText(engine.getBaseUrl());
 				updateCardVisibility(apiKeyCard, EngineParameter.API_KEY);
+				boolean tomTom = engine instanceof TomTomRoutesEngine;
+				apiKeyCard.setPasswordMode(tomTom);
+				apiKeyCard.setFieldBoxLabelText(getString(tomTom ? R.string.smooth_tomtom_key_label : R.string.keep_it_empty_if_not));
 				updateCardVisibility(vehicleCard, EngineParameter.VEHICLE_KEY);
 				updateCardVisibility(approximateCard, EngineParameter.APPROXIMATION_ROUTING_PROFILE);
 				updateCardVisibility(useExternalTimestampsCard, EngineParameter.USE_EXTERNAL_TIMESTAMPS);

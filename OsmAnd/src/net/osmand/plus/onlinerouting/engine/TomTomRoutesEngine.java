@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import net.osmand.data.LatLon;
-import net.osmand.plus.BuildConfig;
 import net.osmand.plus.OsmandApplication;
 import net.osmand.plus.R;
 import net.osmand.plus.onlinerouting.EngineParameter;
@@ -51,9 +50,22 @@ public class TomTomRoutesEngine extends GpxEngine {
 		super(params);
 	}
 
-	/** An engine without a key must not be selectable. */
-	public static boolean isAvailable() {
-		return !BuildConfig.TOMTOM_API_KEY.isEmpty();
+	/** Gives the engine the app context it needs to read the key; call before using getFullUrl outside a route calculation. */
+	public static void attach(@NonNull OsmandApplication app) {
+		appRef = new WeakReference<>(app);
+	}
+
+	/** Puts the stored key back into a URL shown masked (key=***); used only for the "test route" button. */
+	@NonNull
+	public static String revealKey(@NonNull String url) {
+		String key = currentKey();
+		return key == null ? url : url.replace("key=***", "key=" + key);
+	}
+
+	@Nullable
+	private static String currentKey() {
+		OsmandApplication app = appRef.get();
+		return app == null ? null : new TomTomKeyStore(app).get();
 	}
 
 	@NonNull
@@ -86,7 +98,8 @@ public class TomTomRoutesEngine extends GpxEngine {
 		if (path.size() < 2) {
 			return getBaseUrl();
 		}
-		return TomTomRoutesProtocol.buildUrl(path.get(0), path.get(path.size() - 1), BuildConfig.TOMTOM_API_KEY);
+		String key = currentKey(); // read per request, only used inside this URL
+		return TomTomRoutesProtocol.buildUrl(path.get(0), path.get(path.size() - 1), key == null ? "" : key);
 	}
 
 	@Override
@@ -101,14 +114,18 @@ public class TomTomRoutesEngine extends GpxEngine {
 	@Nullable
 	@Override
 	public String getRequestBody(@NonNull List<LatLon> path, @Nullable Float startBearing) throws JSONException {
-		if (!isAvailable()) {
-			throw new JSONException("TomTom API key is not configured");
-		}
 		if (path.size() < 2) {
 			throw new JSONException("Need start and end");
 		}
 		OsmandApplication app = appRef.get();
-		if (app != null && !getQuota(app).tryAcquire(System.currentTimeMillis())) {
+		if (app == null) {
+			throw new JSONException("No app context");
+		}
+		if (!new TomTomKeyStore(app).isSet()) {
+			app.showToastMessage(R.string.smooth_tomtom_key_missing);
+			throw new JSONException("TomTom API key is not set");
+		}
+		if (!getQuota(app).tryAcquire(System.currentTimeMillis())) {
 			app.showToastMessage(R.string.smooth_routes_quota_reached);
 			throw new JSONException("TomTom monthly limit reached");
 		}
@@ -184,7 +201,8 @@ public class TomTomRoutesEngine extends GpxEngine {
 	private static String safeHead(@NonNull String content) {
 		String head = content.substring(0, Math.min(300, content.length()));
 		String masked = TomTomRoutesProtocol.maskKey(head);
-		return isAvailable() ? masked.replace(BuildConfig.TOMTOM_API_KEY, "***") : masked;
+		String key = currentKey();
+		return key == null ? masked : masked.replace(key, "***");
 	}
 
 	@NonNull
@@ -251,6 +269,8 @@ public class TomTomRoutesEngine extends GpxEngine {
 		params.add(EngineParameter.KEY);
 		params.add(EngineParameter.CUSTOM_NAME);
 		params.add(EngineParameter.NAME_INDEX);
+		// only makes the key card visible in the editor: the key itself goes to TomTomKeyStore, never to the params
+		params.add(EngineParameter.API_KEY);
 	}
 
 	@Override

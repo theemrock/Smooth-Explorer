@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Smooth Explorer: Android 12+ cloud backup and device transfer rules; same exclusions as smooth_backup_rules -->
+<data-extraction-rules>
+	<cloud-backup>
+		<exclude domain="sharedpref" path="smooth_tomtom_key.xml" />
+		<exclude domain="sharedpref" path="smooth_tomtom_quota.xml" />
+	</cloud-backup>
+	<device-transfer>
+		<exclude domain="sharedpref" path="smooth_tomtom_key.xml" />
+		<exclude domain="sharedpref" path="smooth_tomtom_quota.xml" />
+	</device-transfer>
+</data-extraction-rules>

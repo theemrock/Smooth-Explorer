@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 
 import net.osmand.util.Algorithms;
 
-import java.util.Arrays;
-
 public class EngineType {
 
 	public static final OnlineRoutingEngine GRAPHHOPPER_TYPE = new GraphhopperEngine(null);
@@ -22,13 +20,9 @@ public class EngineType {
 					GRAPHHOPPER_TYPE,
 					OSRM_TYPE,
 					ORS_TYPE,
-					GPX_TYPE
+					GPX_TYPE,
+					TOMTOM_TYPE
 			};
-		}
-		if (TomTomRoutesEngine.isAvailable()) { // no API key in the build: engine is not selectable
-			OnlineRoutingEngine[] withTomTom = Arrays.copyOf(enginesTypes, enginesTypes.length + 1);
-			withTomTom[enginesTypes.length] = TOMTOM_TYPE;
-			return withTomTom;
 		}
 		return enginesTypes;
 	}

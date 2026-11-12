@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Smooth Explorer: the encrypted TomTom key and its request counter never go into backups -->
+<full-backup-content>
+	<exclude domain="sharedpref" path="smooth_tomtom_key.xml" />
+	<exclude domain="sharedpref" path="smooth_tomtom_quota.xml" />
+</full-backup-content>
