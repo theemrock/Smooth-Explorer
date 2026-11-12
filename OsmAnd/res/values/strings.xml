@@ -11,6 +11,13 @@
 	Strings for OsmAnd core
 	Thx - Hardy
 -->
+	<string name="smooth_map_mode_name">Map mode</string>
+	<string name="smooth_map_mode_descr">Switches between the offline map, the online map and the online map with traffic</string>
+	<string name="smooth_map_mode_offline">Map mode: offline</string>
+	<string name="smooth_map_mode_online">Map mode: online</string>
+	<string name="smooth_map_mode_online_traffic">Map mode: online with traffic</string>
+	<string name="smooth_mode_no_internet">No internet. Showing the offline map.</string>
+	<string name="smooth_base_quota_reached">TomTom map monthly request limit reached. Showing the offline map.</string>
 	<string name="smooth_traffic_layer">Traffic</string>
 	<string name="smooth_traffic_attribution">© TomTom</string>
 	<string name="smooth_traffic_key_missing">Enter your TomTom API key (online routing settings) to show traffic.</string>

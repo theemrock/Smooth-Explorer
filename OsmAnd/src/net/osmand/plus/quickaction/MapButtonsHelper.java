@@ -104,6 +104,7 @@ public class MapButtonsHelper {
 	private ConfigureMapButtonState configureMapButtonState;
 	private DrawerMenuButtonState drawerMenuButtonState;
 	private CompassButtonState compassButtonState;
+	private MapModeButtonState mapModeButtonState;
 	private List<QuickActionButtonState> quickActionStates = new ArrayList<>();
 
 	private List<QuickActionType> enabledTypes = new ArrayList<>();
@@ -125,6 +126,7 @@ public class MapButtonsHelper {
 
 	private void initDefaultButtons() {
 		compassButtonState = new CompassButtonState(app);
+		mapModeButtonState = new MapModeButtonState(app);
 		configureMapButtonState = new ConfigureMapButtonState(app);
 		drawerMenuButtonState = new DrawerMenuButtonState(app);
 		map3DButtonState = new Map3DButtonState(app);
@@ -156,6 +158,11 @@ public class MapButtonsHelper {
 	@NonNull
 	public Map3DButtonState getMap3DButtonState() {
 		return map3DButtonState;
+	}
+
+	@NonNull
+	public MapModeButtonState getMapModeButtonState() {
+		return mapModeButtonState;
 	}
 
 	@NonNull

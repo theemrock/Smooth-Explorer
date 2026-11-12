@@ -12,6 +12,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.os.AsyncTask;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -59,7 +62,13 @@ import net.osmand.plus.widgets.ctxmenu.callback.OnDataChangeUiAdapter;
 import net.osmand.plus.widgets.ctxmenu.callback.OnRowItemClick;
 import net.osmand.plus.widgets.ctxmenu.data.ContextMenuItem;
 import net.osmand.render.RenderingRuleProperty;
+import net.osmand.plus.views.mapwidgets.configure.buttons.MapModeButtonState;
+import net.osmand.smooth.map.MapMode;
+import net.osmand.smooth.map.MapModePolicy;
+import net.osmand.smooth.map.MapModePolicy.Reason;
+import net.osmand.smooth.map.MapModePolicy.Result;
 import net.osmand.smooth.routes.MonthlyQuota;
+import net.osmand.smooth.routes.TomTomBaseTileSource;
 import net.osmand.smooth.routes.TomTomTrafficTileSource;
 import net.osmand.util.Algorithms;
 
@@ -81,15 +90,20 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 
 	// the renderer numbers map layers as zOrder * 100, so this must not equal another layer (weather uses 0.8-0.82)
 	private static final float ZORDER_TRAFFIC = 0.75f;
+	private static final float ZORDER_CREDIT = 0.76f;
+	// base map: above the vector map (0) and the main online layer (0.05), below everything else (index 10)
+	private static final float ZORDER_BASE = 0.1f;
 	private static final String SMOOTH_TRAFFIC_ITEM_ID = "smooth_traffic";
 
 	private final OsmandSettings settings;
-	/** TomTom traffic overlay on/off. Off until the user turns it on; stays as the user left it. */
-	private final CommonPreference<Boolean> smoothTraffic;
 
 	private TomTomTrafficTileSource trafficSource;
+	private TomTomBaseTileSource baseSource;
 	private MapTileLayer trafficLayer;
+	private MapTileLayer baseLayer;
 	private TomTomCreditLayer creditLayer;
+	private Reason lastMapModeReason = Reason.NONE;
+	private Boolean lastOnline;
 	private MapTileLayer overlayLayer;
 	private MapTileLayer underlayLayer;
 	private StateChangedListener<String> underlayListener;
@@ -99,7 +113,6 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 	public OsmandRasterMapsPlugin(OsmandApplication app) {
 		super(app);
 		settings = app.getSettings();
-		smoothTraffic = registerBooleanPreference("smooth_traffic_overlay", false).makeGlobal().makeShared();
 	}
 
 	@Override
@@ -209,61 +222,142 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 				layers.getMapControlsLayer().getMapTransparencyHelper().hideTransparencyBar();
 			}
 		}
-		updateTrafficLayer(context, mapView);
+		updateTomTomLayers(context, mapView);
 		app.getOsmandMap().getMapLayers().updateMapSource(mapView, settingsToWarnAboutMap);
 	}
 
 	@NonNull
-	private TomTomTrafficTileSource getTrafficSource(@NonNull TomTomKeyStore keyStore) {
-		if (trafficSource == null) {
-			SharedPreferences prefs = app.getSharedPreferences("smooth_tomtom_traffic_quota", 0);
-			MonthlyQuota quota = new MonthlyQuota(new MonthlyQuota.Store() {
-				public String getMonth() {
-					return prefs.getString("month", null);
-				}
+	private MonthlyQuota createQuota(@NonNull String prefsName, int limit) {
+		SharedPreferences prefs = app.getSharedPreferences(prefsName, 0);
+		return new MonthlyQuota(new MonthlyQuota.Store() {
+			public String getMonth() {
+				return prefs.getString("month", null);
+			}
 
-				public int getCount() {
-					return prefs.getInt("count", 0);
-				}
+			public int getCount() {
+				return prefs.getInt("count", 0);
+			}
 
-				public void save(String month, int count) {
-					prefs.edit().putString("month", month).putInt("count", count).apply();
-				}
-			}, TomTomTrafficTileSource.MONTHLY_LIMIT);
-			trafficSource = new TomTomTrafficTileSource(keyStore::get, quota, System::currentTimeMillis);
-		}
-		return trafficSource;
+			public void save(String month, int count) {
+				prefs.edit().putString("month", month).putInt("count", count).apply();
+			}
+		}, limit);
 	}
 
-	/** Traffic shows only when the switch is on, a key is stored and the monthly cap is not used up. */
-	private void updateTrafficLayer(@NonNull Context context, @NonNull OsmandMapTileView mapView) {
-		TomTomKeyStore keyStore = new TomTomKeyStore(app);
-		TomTomTrafficTileSource source = getTrafficSource(keyStore);
-		if (trafficLayer == null) {
-			trafficLayer = new MapTileLayer(context, false);
-			creditLayer = new TomTomCreditLayer(context, source, keyStore, () -> app.runInUIThread(() -> {
-				if (smoothTraffic.get()) {
-					smoothTraffic.set(false);
-					app.showToastMessage(R.string.smooth_traffic_quota_reached);
-				}
-				updateTrafficLayer(app, mapView);
-			}));
+	@NonNull
+	private MapModeButtonState getMapModeState() {
+		return app.getMapButtonsHelper().getMapModeButtonState();
+	}
+
+	private boolean hasInternet() {
+		ConnectivityManager cm = (ConnectivityManager) app.getSystemService(Context.CONNECTIVITY_SERVICE);
+		Network network = cm == null ? null : cm.getActiveNetwork();
+		NetworkCapabilities caps = network == null ? null : cm.getNetworkCapabilities(network);
+		return caps != null && caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+				&& caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+	}
+
+	/** The map button: picks the next mode; what is really shown is MapModePolicy's answer for that mode. */
+	public void cycleMapMode(@NonNull MapActivity mapActivity) {
+		MapModeButtonState state = getMapModeState();
+		MapMode next = state.getMode().next();
+		state.setMode(next);
+		if (next != MapMode.OFFLINE && !isEnabled()) {
+			// the layers are created and refreshed by this plugin, so it has to be on for them to show
+			PluginsHelper.enablePlugin(mapActivity, app, this, true);
 		}
-		boolean show = isActive() && smoothTraffic.get() && keyStore.isSet() && !source.isLimitReached();
+		lastMapModeReason = Reason.NONE; // the user just pressed: always say why an online mode fell back
+		updateMapLayers(mapActivity, mapActivity, null);
+	}
+
+	/** Follows the network without the user pressing anything: offline map on loss, TomTom again on return. */
+	private void onNetworkChanged() {
+		app.runInUIThread(() -> {
+			boolean online = hasInternet();
+			if (trafficLayer != null && !Boolean.valueOf(online).equals(lastOnline)) {
+				updateTomTomLayers(app, app.getOsmandMap().getMapView());
+			}
+		});
+	}
+
+	private void announce(@NonNull Reason reason) {
+		if (reason == lastMapModeReason) {
+			return;
+		}
+		lastMapModeReason = reason;
+		switch (reason) {
+			case NO_INTERNET -> app.showToastMessage(R.string.smooth_mode_no_internet);
+			case NO_KEY -> app.showToastMessage(R.string.smooth_traffic_key_missing);
+			case BASE_QUOTA -> app.showToastMessage(R.string.smooth_base_quota_reached);
+			case TRAFFIC_QUOTA -> app.showToastMessage(R.string.smooth_traffic_quota_reached);
+			default -> { }
+		}
+	}
+
+	private void showTileLayer(@NonNull OsmandMapTileView mapView, @NonNull MapTileLayer layer,
+	                           @NonNull ITileSource source, float zOrder, boolean show) {
 		if (show) {
-			if (!mapView.isLayerExists(trafficLayer)) {
-				mapView.addLayer(trafficLayer, ZORDER_TRAFFIC);
+			if (!mapView.isLayerExists(layer)) {
+				mapView.addLayer(layer, zOrder);
 			}
-			if (!mapView.isLayerExists(creditLayer)) {
-				mapView.addLayer(creditLayer, ZORDER_TRAFFIC);
+			if (layer.getMap() != source) {
+				layer.setMap(source);
 			}
-			if (trafficLayer.getMap() != source) {
-				trafficLayer.setMap(source);
+		} else if (mapView.isLayerExists(layer)) {
+			mapView.removeLayer(layer);
+			layer.setMap(null);
+		}
+	}
+
+	/** The one place that turns the picked map mode into layers on the map. */
+	private void updateTomTomLayers(@NonNull Context context, @NonNull OsmandMapTileView mapView) {
+		TomTomKeyStore keyStore = new TomTomKeyStore(app);
+		if (trafficLayer == null) {
+			trafficSource = new TomTomTrafficTileSource(keyStore::get,
+					createQuota("smooth_tomtom_traffic_quota", TomTomTrafficTileSource.MONTHLY_LIMIT), System::currentTimeMillis);
+			baseSource = new TomTomBaseTileSource(keyStore::get,
+					createQuota("smooth_tomtom_base_quota", TomTomBaseTileSource.MONTHLY_LIMIT), System::currentTimeMillis);
+			trafficLayer = new MapTileLayer(context, false);
+			baseLayer = new MapTileLayer(context, false);
+			// re-check now and then so a used-up cap or a deleted key takes the layers away without a button press
+			creditLayer = new TomTomCreditLayer(context, () -> app.runInUIThread(
+					() -> updateTomTomLayers(app, app.getOsmandMap().getMapView())));
+			try {
+				ConnectivityManager cm = (ConnectivityManager) app.getSystemService(Context.CONNECTIVITY_SERVICE);
+				cm.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
+					@Override
+					public void onAvailable(@NonNull Network network) {
+						onNetworkChanged();
+					}
+
+					@Override
+					public void onLost(@NonNull Network network) {
+						onNetworkChanged();
+					}
+
+					@Override
+					public void onCapabilitiesChanged(@NonNull Network network, @NonNull NetworkCapabilities caps) {
+						onNetworkChanged();
+					}
+				});
+			} catch (RuntimeException e) {
+				// no network-state access: the mode still works, it only stops following the network live
 			}
-		} else if (mapView.isLayerExists(trafficLayer)) {
-			mapView.removeLayer(trafficLayer);
+		}
+		boolean online = hasInternet();
+		lastOnline = online;
+		Result result = MapModePolicy.decide(getMapModeState().getMode(), online, keyStore.isSet(),
+				!baseSource.isLimitReached(), !trafficSource.isLimitReached());
+		announce(result.reason);
+
+		boolean active = isActive();
+		showTileLayer(mapView, baseLayer, baseSource, ZORDER_BASE, active && result.showBase);
+		showTileLayer(mapView, trafficLayer, trafficSource, ZORDER_TRAFFIC, active && result.showTraffic);
+		boolean showCredit = active && (result.showBase || result.showTraffic);
+		if (showCredit && !mapView.isLayerExists(creditLayer)) {
+			mapView.addLayer(creditLayer, ZORDER_CREDIT);
+		} else if (!showCredit && mapView.isLayerExists(creditLayer)) {
 			mapView.removeLayer(creditLayer);
-			trafficLayer.setMap(null);
 		}
 		mapView.refreshMap();
 	}
@@ -538,7 +632,7 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 			@Override
 			public boolean onContextMenuClick(@Nullable OnDataChangeUiAdapter uiAdapter, @Nullable View view,
 			                                  @NonNull ContextMenuItem item, boolean isChecked) {
-				boolean turnOn = !smoothTraffic.get();
+				MapModeButtonState state = getMapModeState(); boolean turnOn = state.getMode() != MapMode.ONLINE_TRAFFIC;
 				if (turnOn && !new TomTomKeyStore(app).isSet()) {
 					app.showToastMessage(R.string.smooth_traffic_key_missing);
 					item.setSelected(false); // the row switch already flipped itself
@@ -547,7 +641,7 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 					}
 					return false;
 				}
-				smoothTraffic.set(turnOn);
+				state.setMode(turnOn ? MapMode.ONLINE_TRAFFIC : MapMode.ONLINE); lastMapModeReason = Reason.NONE; // the menu row is a shortcut into the mode the map button cycles
 				if (turnOn && !isEnabled()) {
 					// the layer is created and refreshed by this plugin, so it has to be on for traffic to show
 					PluginsHelper.enablePlugin(mapActivity, app, OsmandRasterMapsPlugin.this, true);
@@ -563,8 +657,8 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 		};
 		adapter.addItem(new ContextMenuItem(SMOOTH_TRAFFIC_ITEM_ID)
 				.setTitleId(R.string.smooth_traffic_layer, mapActivity)
-				.setSelected(smoothTraffic.get())
-				.setColor(app, smoothTraffic.get() ? R.color.osmand_orange : ContextMenuItem.INVALID_ID)
+				.setSelected(getMapModeState().getMode() == MapMode.ONLINE_TRAFFIC)
+				.setColor(app, getMapModeState().getMode() == MapMode.ONLINE_TRAFFIC ? R.color.osmand_orange : ContextMenuItem.INVALID_ID)
 				.setIcon(R.drawable.ic_layer_top)
 				.setListener(trafficListener));
 	}

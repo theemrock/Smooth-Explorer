@@ -3,7 +3,7 @@ package net.osmand.map;
 import net.osmand.PlatformUtil;
 import net.osmand.osm.io.NetworkUtils;
 import net.osmand.smooth.routes.TomTomRoutesProtocol;
-import net.osmand.smooth.routes.TomTomTrafficTileSource;
+import net.osmand.smooth.routes.TomTomRasterTileSource;
 import net.osmand.util.Algorithms;
 import net.osmand.util.LIFOBlockingDeque;
 
@@ -244,9 +244,9 @@ public class MapTileDownloader {
 						connection.setRequestProperty("Referer", request.referer); 
 					connection.setConnectTimeout(CONNECT_TIMEOUT);
 					connection.setReadTimeout(READ_TIMEOUT);
-					if (TomTomTrafficTileSource.isTrafficUrl(request.url)) {
+					if (TomTomRasterTileSource.isTomTomTileUrl(request.url)) {
 							int code = connection.getResponseCode();
-							log.info(TomTomTrafficTileSource.logLine(code));
+							log.info(TomTomRasterTileSource.logLine(code));
 							if (code != HttpURLConnection.HTTP_OK) {
 								throw new IOException("HTTP " + code);
 							}
@@ -265,7 +265,7 @@ public class MapTileDownloader {
 					currentErrors++;
 					timeForErrorCounter = System.currentTimeMillis();
 					request.setError(true);
-					if (TomTomTrafficTileSource.isTrafficUrl(request.url)) { log.warn("Cannot download tile : " + safeUrl(request.url) + " " + e.getClass().getSimpleName()); } else { log.warn("Cannot download tile : " + request.url, e); } // TomTom: no stack trace, it can carry the URL (API key) 
+					if (TomTomRasterTileSource.isTomTomTileUrl(request.url)) { log.warn("Cannot download tile : " + safeUrl(request.url) + " " + e.getClass().getSimpleName()); } else { log.warn("Cannot download tile : " + request.url, e); } // TomTom: no stack trace, it can carry the URL (API key) 
 				} finally {
 					currentlyDownloaded.remove(request.fileToSave);
 					if (connection != null) {
@@ -286,8 +286,8 @@ public class MapTileDownloader {
 
 	/** URLs may carry an API key (TomTom): log only the masked form. */
 	private static String safeUrl(String url) {
-		if (TomTomTrafficTileSource.isTrafficUrl(url)) {
-			return "[tomtom traffic tile]"; // no URL at all in the log, not even masked
+		if (TomTomRasterTileSource.isTomTomTileUrl(url)) {
+			return "[tomtom tile]"; // no URL at all in the log, not even masked
 		}
 		return TomTomRoutesProtocol.maskKey(String.valueOf(url));
 	}

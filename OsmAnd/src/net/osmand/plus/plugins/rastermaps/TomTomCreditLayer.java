@@ -8,35 +8,28 @@ import androidx.annotation.NonNull;
 
 import net.osmand.data.RotatedTileBox;
 import net.osmand.plus.R;
-import net.osmand.plus.onlinerouting.engine.TomTomKeyStore;
 import net.osmand.plus.views.layers.base.OsmandMapLayer;
-import net.osmand.smooth.routes.TomTomTrafficTileSource;
 
 /**
- * Draws the "© TomTom" credit for as long as the traffic overlay is on, and turns the overlay off when the
- * monthly cap is used up. It is a separate screen-pixel layer because the tile layer itself must be a normal
- * (map-space) layer: the map only asks those for their tile provider.
+ * Draws the "© TomTom" credit for as long as a TomTom layer (base map or traffic) is on. Every few seconds it
+ * asks the plugin to re-check the map mode, so a used-up cap or a deleted key takes the layers away without a
+ * button press. It is a separate screen-pixel layer because the tile layers themselves must be normal
+ * (map-space) layers: the map only asks those for their tile provider.
  */
 public class TomTomCreditLayer extends OsmandMapLayer {
 
-	private static final long KEY_RECHECK_MS = 5000;
+	private static final long RECHECK_MS = 5000;
 
-	private final TomTomTrafficTileSource source;
-	private final TomTomKeyStore keyStore;
-	private final Runnable onLimitReached;
+	private final Runnable recheck;
 	private final Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private final Paint outlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private final String credit;
 	private final float pad;
-	private long keyCheckedAt;
-	private boolean hasKey;
+	private long recheckedAt;
 
-	public TomTomCreditLayer(@NonNull Context context, @NonNull TomTomTrafficTileSource source,
-	                         @NonNull TomTomKeyStore keyStore, @NonNull Runnable onLimitReached) {
+	public TomTomCreditLayer(@NonNull Context context, @NonNull Runnable recheck) {
 		super(context);
-		this.source = source;
-		this.keyStore = keyStore;
-		this.onLimitReached = onLimitReached;
+		this.recheck = recheck;
 		float density = context.getResources().getDisplayMetrics().density;
 		credit = context.getString(R.string.smooth_traffic_attribution);
 		pad = 8 * density;
@@ -57,16 +50,9 @@ public class TomTomCreditLayer extends OsmandMapLayer {
 	@Override
 	public void onDraw(Canvas canvas, RotatedTileBox tileBox, DrawSettings drawSettings) {
 		long now = System.currentTimeMillis();
-		if (now - keyCheckedAt > KEY_RECHECK_MS) {
-			hasKey = keyStore.isSet(); // keystore read: not on every frame
-			keyCheckedAt = now;
-		}
-		if (!hasKey) {
-			return;
-		}
-		if (source.isLimitReached()) {
-			onLimitReached.run();
-			return;
+		if (now - recheckedAt > RECHECK_MS) {
+			recheckedAt = now;
+			recheck.run();
 		}
 		// bottom row: ruler on the left of centre, zoom buttons on the right, so the gap between them is free
 		float x = canvas.getWidth() * 0.66f;

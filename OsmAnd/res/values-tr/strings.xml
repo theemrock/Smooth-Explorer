@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="smooth_map_mode_name">Harita modu</string>
+    <string name="smooth_map_mode_descr">Çevrim dışı harita, çevrim içi harita ve trafikli çevrim içi harita arasında geçiş yapar</string>
+    <string name="smooth_map_mode_offline">Harita modu: çevrim dışı</string>
+    <string name="smooth_map_mode_online">Harita modu: çevrim içi</string>
+    <string name="smooth_map_mode_online_traffic">Harita modu: çevrim içi + trafik</string>
+    <string name="smooth_mode_no_internet">İnternet yok. Çevrim dışı harita gösteriliyor.</string>
+    <string name="smooth_base_quota_reached">TomTom harita aylık istek sınırı doldu. Çevrim dışı harita gösteriliyor.</string>
     <string name="smooth_traffic_layer">Trafik</string>
     <string name="smooth_traffic_attribution">© TomTom</string>
     <string name="smooth_traffic_key_missing">Trafiği göstermek için TomTom API anahtarını girin (çevrimiçi rota ayarları).</string>

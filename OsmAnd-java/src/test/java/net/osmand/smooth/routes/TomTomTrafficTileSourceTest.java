@@ -76,6 +76,22 @@ public class TomTomTrafficTileSourceTest {
 	}
 
 	@Test
+	public void baseMapHasItsOwnUrlCounterAndCache() {
+		MemStore baseStore = new MemStore();
+		MemStore trafficStore = new MemStore();
+		long[] now = {1_000_000L};
+		TomTomBaseTileSource base = new TomTomBaseTileSource(() -> KEY, new MonthlyQuota(baseStore, 100), () -> now[0]);
+		TomTomTrafficTileSource traffic = new TomTomTrafficTileSource(() -> KEY, new MonthlyQuota(trafficStore, 100), () -> now[0]);
+		assertEquals("https://api.tomtom.com/map/1/tile/basic/main/12/2/3.png?tileSize=256&key=" + KEY,
+				base.getUrlToLoad(2, 3, 12));
+		assertEquals(1, baseStore.count);
+		assertEquals(0, trafficStore.count);
+		assertEquals(24 * 60, base.getExpirationTimeMinutes());
+		assertEquals(5, traffic.getExpirationTimeMinutes());
+		assertTrue(TomTomRasterTileSource.isTomTomTileUrl(base.getUrlToLoad(2, 3, 12)));
+	}
+
+	@Test
 	public void cacheLifetimeIsFiveMinutes() {
 		assertEquals(5, source(KEY, 1, new long[]{0}).getExpirationTimeMinutes());
 	}
@@ -83,9 +99,9 @@ public class TomTomTrafficTileSourceTest {
 	@Test
 	public void logLineNeverHasTheKeyOrUrl() {
 		String url = source(KEY, 10, new long[]{1_000_000L}).getUrlToLoad(1, 2, 10);
-		assertTrue(TomTomTrafficTileSource.isTrafficUrl(url));
-		String line = TomTomTrafficTileSource.logLine(42, 200);
-		assertEquals("tomtom traffic tile http=200 count=42", line);
+		assertTrue(TomTomRasterTileSource.isTomTomTileUrl(url));
+		String line = TomTomRasterTileSource.logLine(42, 200);
+		assertEquals("tomtom tile http=200 count=42", line);
 		assertFalse(line.contains(KEY));
 		assertFalse(line.contains("tomtom.com"));
 		assertFalse(TomTomRoutesProtocol.maskKey(url).contains(KEY));
