@@ -10,6 +10,7 @@ import static net.osmand.plus.resources.ResourceManager.ResourceListener;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.view.ContextThemeWrapper;
@@ -35,7 +36,9 @@ import net.osmand.plus.activities.MapActivity;
 import net.osmand.plus.configmap.ConfigureMapFragment;
 import net.osmand.plus.dashboard.DashboardType;
 import net.osmand.plus.mapsource.EditMapSourceDialogFragment;
+import net.osmand.plus.onlinerouting.engine.TomTomKeyStore;
 import net.osmand.plus.plugins.OsmandPlugin;
+import net.osmand.plus.plugins.PluginsHelper;
 import net.osmand.plus.quickaction.QuickActionType;
 import net.osmand.plus.resources.SQLiteTileSource;
 import net.osmand.plus.settings.backend.OsmandSettings;
@@ -56,6 +59,8 @@ import net.osmand.plus.widgets.ctxmenu.callback.OnDataChangeUiAdapter;
 import net.osmand.plus.widgets.ctxmenu.callback.OnRowItemClick;
 import net.osmand.plus.widgets.ctxmenu.data.ContextMenuItem;
 import net.osmand.render.RenderingRuleProperty;
+import net.osmand.smooth.routes.MonthlyQuota;
+import net.osmand.smooth.routes.TomTomTrafficTileSource;
 import net.osmand.util.Algorithms;
 
 import java.lang.ref.WeakReference;
@@ -74,8 +79,15 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 	private static final float ZORDER_UNDERLAY = -0.5f;
 	private static final float ZORDER_OVERLAY = 0.7f;
 
-	private final OsmandSettings settings;
+	private static final float ZORDER_TRAFFIC = 0.8f;
+	private static final String SMOOTH_TRAFFIC_ITEM_ID = "smooth_traffic";
 
+	private final OsmandSettings settings;
+	/** TomTom traffic overlay on/off. Off until the user turns it on; stays as the user left it. */
+	private final CommonPreference<Boolean> smoothTraffic;
+
+	private TomTomTrafficTileSource trafficSource;
+	private TomTomTrafficLayer trafficLayer;
 	private MapTileLayer overlayLayer;
 	private MapTileLayer underlayLayer;
 	private StateChangedListener<String> underlayListener;
@@ -85,6 +97,7 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 	public OsmandRasterMapsPlugin(OsmandApplication app) {
 		super(app);
 		settings = app.getSettings();
+		smoothTraffic = registerBooleanPreference("smooth_traffic_overlay", false).makeGlobal().makeShared();
 	}
 
 	@Override
@@ -194,7 +207,58 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 				layers.getMapControlsLayer().getMapTransparencyHelper().hideTransparencyBar();
 			}
 		}
+		updateTrafficLayer(context, mapView);
 		app.getOsmandMap().getMapLayers().updateMapSource(mapView, settingsToWarnAboutMap);
+	}
+
+	@NonNull
+	private TomTomTrafficTileSource getTrafficSource(@NonNull TomTomKeyStore keyStore) {
+		if (trafficSource == null) {
+			SharedPreferences prefs = app.getSharedPreferences("smooth_tomtom_traffic_quota", 0);
+			MonthlyQuota quota = new MonthlyQuota(new MonthlyQuota.Store() {
+				public String getMonth() {
+					return prefs.getString("month", null);
+				}
+
+				public int getCount() {
+					return prefs.getInt("count", 0);
+				}
+
+				public void save(String month, int count) {
+					prefs.edit().putString("month", month).putInt("count", count).apply();
+				}
+			}, TomTomTrafficTileSource.MONTHLY_LIMIT);
+			trafficSource = new TomTomTrafficTileSource(keyStore::get, quota, System::currentTimeMillis);
+		}
+		return trafficSource;
+	}
+
+	/** Traffic shows only when the switch is on, a key is stored and the monthly cap is not used up. */
+	private void updateTrafficLayer(@NonNull Context context, @NonNull OsmandMapTileView mapView) {
+		TomTomKeyStore keyStore = new TomTomKeyStore(app);
+		TomTomTrafficTileSource source = getTrafficSource(keyStore);
+		if (trafficLayer == null) {
+			trafficLayer = new TomTomTrafficLayer(context, source, keyStore, () -> app.runInUIThread(() -> {
+				if (smoothTraffic.get()) {
+					smoothTraffic.set(false);
+					app.showToastMessage(R.string.smooth_traffic_quota_reached);
+				}
+				updateTrafficLayer(app, mapView);
+			}));
+		}
+		boolean show = isActive() && smoothTraffic.get() && keyStore.isSet() && !source.isLimitReached();
+		if (show) {
+			if (!mapView.isLayerExists(trafficLayer)) {
+				mapView.addLayer(trafficLayer, ZORDER_TRAFFIC);
+			}
+			if (trafficLayer.getMap() != source) {
+				trafficLayer.setMap(source);
+			}
+		} else if (mapView.isLayerExists(trafficLayer)) {
+			mapView.removeLayer(trafficLayer);
+			trafficLayer.setMap(null);
+		}
+		mapView.refreshMap();
 	}
 
 	public boolean updateLayer(OsmandMapTileView mapView, OsmandSettings settings,
@@ -334,6 +398,7 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 
 	@Override
 	protected void registerLayerContextMenuActions(@NonNull ContextMenuAdapter adapter, @NonNull MapActivity mapActivity, @NonNull List<RenderingRuleProperty> customRules) {
+		addTrafficMenuItem(adapter, mapActivity);
 		if (!isEnabled()) {
 			return;
 		}
@@ -457,6 +522,44 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 				.setSecondaryIcon(R.drawable.ic_action_additional_option)
 				.setListener(listener)
 				.setItemDeleteAction(settings.MAP_UNDERLAY, settings.MAP_UNDERLAY_PREVIOUS));
+
+	}
+
+	/** Not tied to the Online maps plugin: traffic is a Smooth Explorer feature that must be reachable by default. */
+	private void addTrafficMenuItem(@NonNull ContextMenuAdapter adapter, @NonNull MapActivity mapActivity) {
+		ItemClickListener trafficListener = new OnRowItemClick() {
+			@Override
+			public boolean onContextMenuClick(@Nullable OnDataChangeUiAdapter uiAdapter, @Nullable View view,
+			                                  @NonNull ContextMenuItem item, boolean isChecked) {
+				boolean turnOn = !smoothTraffic.get();
+				if (turnOn && !new TomTomKeyStore(app).isSet()) {
+					app.showToastMessage(R.string.smooth_traffic_key_missing);
+					item.setSelected(false); // the row switch already flipped itself
+					if (uiAdapter != null) {
+						uiAdapter.onDataSetChanged();
+					}
+					return false;
+				}
+				smoothTraffic.set(turnOn);
+				if (turnOn && !isEnabled()) {
+					// the layer is created and refreshed by this plugin, so it has to be on for traffic to show
+					PluginsHelper.enablePlugin(mapActivity, app, OsmandRasterMapsPlugin.this, true);
+				}
+				updateMapLayers(mapActivity, mapActivity, null);
+				item.setSelected(turnOn);
+				item.setColor(app, turnOn ? R.color.osmand_orange : ContextMenuItem.INVALID_ID);
+				if (uiAdapter != null) {
+					uiAdapter.onDataSetChanged();
+				}
+				return false;
+			}
+		};
+		adapter.addItem(new ContextMenuItem(SMOOTH_TRAFFIC_ITEM_ID)
+				.setTitleId(R.string.smooth_traffic_layer, mapActivity)
+				.setSelected(smoothTraffic.get())
+				.setColor(app, smoothTraffic.get() ? R.color.osmand_orange : ContextMenuItem.INVALID_ID)
+				.setIcon(R.drawable.ic_layer_top)
+				.setListener(trafficListener));
 	}
 
 	@Override

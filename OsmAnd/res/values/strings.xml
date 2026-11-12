@@ -11,6 +11,10 @@
 	Strings for OsmAnd core
 	Thx - Hardy
 -->
+	<string name="smooth_traffic_layer">Traffic</string>
+	<string name="smooth_traffic_attribution">© TomTom</string>
+	<string name="smooth_traffic_key_missing">Enter your TomTom API key (online routing settings) to show traffic.</string>
+	<string name="smooth_traffic_quota_reached">TomTom traffic monthly request limit reached. Traffic layer turned off.</string>
 	<string name="smooth_routes_quota_reached">TomTom monthly request limit reached. Using offline routing.</string>
 	<string name="smooth_tomtom_key_label">TomTom API key (stored encrypted; leave empty and save to delete)</string>
 	<string name="smooth_tomtom_key_missing">TomTom API key is not set. Using offline routing.</string>

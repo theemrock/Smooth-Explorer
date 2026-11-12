@@ -33,6 +33,10 @@ public final class MonthlyQuota {
 		return monthOf(now).equals(store.getMonth()) ? store.getCount() : 0;
 	}
 
+	public synchronized boolean isExhausted(long now) {
+		return used(now) >= limit;
+	}
+
 	/** Counts one request. @return false (and counts nothing) when the limit is already reached. */
 	public synchronized boolean tryAcquire(long now) {
 		int used = used(now);

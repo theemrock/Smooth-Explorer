@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="smooth_traffic_layer">Trafik</string>
+    <string name="smooth_traffic_attribution">© TomTom</string>
+    <string name="smooth_traffic_key_missing">Trafiği göstermek için TomTom API anahtarını girin (çevrimiçi rota ayarları).</string>
+    <string name="smooth_traffic_quota_reached">TomTom trafik aylık istek sınırı doldu. Trafik katmanı kapatıldı.</string>
     <string name="smooth_routes_quota_reached">TomTom aylık istek sınırı doldu. Çevrimdışı rota kullanılıyor.</string>
     <string name="smooth_tomtom_key_label">TomTom API anahtarı (şifreli saklanır; silmek için boş bırakıp kaydedin)</string>
     <string name="smooth_tomtom_key_missing">TomTom API anahtarı girilmemiş. Çevrimdışı rota kullanılıyor.</string>

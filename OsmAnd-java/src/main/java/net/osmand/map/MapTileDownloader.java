@@ -2,6 +2,8 @@ package net.osmand.map;
 
 import net.osmand.PlatformUtil;
 import net.osmand.osm.io.NetworkUtils;
+import net.osmand.smooth.routes.TomTomRoutesProtocol;
+import net.osmand.smooth.routes.TomTomTrafficTileSource;
 import net.osmand.util.Algorithms;
 import net.osmand.util.LIFOBlockingDeque;
 
@@ -230,7 +232,7 @@ public class MapTileDownloader {
 
 				currentlyDownloaded.put(request.fileToSave, request);
 				if (log.isDebugEnabled()) {
-					log.debug("Start downloading tile : " + request.url); 
+					log.debug("Start downloading tile : " + safeUrl(request.url)); 
 				}
 				long time = System.currentTimeMillis();
 				request.setError(false);
@@ -242,21 +244,28 @@ public class MapTileDownloader {
 						connection.setRequestProperty("Referer", request.referer); 
 					connection.setConnectTimeout(CONNECT_TIMEOUT);
 					connection.setReadTimeout(READ_TIMEOUT);
-					BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream(), 8 * 1024);
+					if (TomTomTrafficTileSource.isTrafficUrl(request.url)) {
+							int code = connection.getResponseCode();
+							log.info(TomTomTrafficTileSource.logLine(code));
+							if (code != HttpURLConnection.HTTP_OK) {
+								throw new IOException("HTTP " + code);
+							}
+						}
+						BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream(), 8 * 1024);
 					request.saveTile(inputStream);
 					if (log.isDebugEnabled()) {
-						log.debug("Downloading tile : " + request.url + " successfull " + (System.currentTimeMillis() - time) + " ms");  //$NON-NLS-2$ //$NON-NLS-3$
+						log.debug("Downloading tile : " + safeUrl(request.url) + " successfull " + (System.currentTimeMillis() - time) + " ms");  //$NON-NLS-2$ //$NON-NLS-3$
 					}
 				} catch (UnknownHostException e) {
 					currentErrors++;
 					timeForErrorCounter = System.currentTimeMillis();
 					request.setError(true);
-					log.error("UnknownHostException, cannot download tile " + request.url + " " + e.getMessage());   //$NON-NLS-2$
+					log.error("UnknownHostException, cannot download tile " + safeUrl(request.url) + " " + e.getMessage());   //$NON-NLS-2$
 				} catch (Exception e) {
 					currentErrors++;
 					timeForErrorCounter = System.currentTimeMillis();
 					request.setError(true);
-					log.warn("Cannot download tile : " + request.url, e); 
+					if (TomTomTrafficTileSource.isTrafficUrl(request.url)) { log.warn("Cannot download tile : " + safeUrl(request.url) + " " + e.getClass().getSimpleName()); } else { log.warn("Cannot download tile : " + request.url, e); } // TomTom: no stack trace, it can carry the URL (API key) 
 				} finally {
 					currentlyDownloaded.remove(request.fileToSave);
 					if (connection != null) {
@@ -273,6 +282,11 @@ public class MapTileDownloader {
 		public int compareTo(DownloadMapWorker o) {
 			return 0;
 		}
+	}
+
+	/** URLs may carry an API key (TomTom): log only the masked form. */
+	private static String safeUrl(String url) {
+		return TomTomRoutesProtocol.maskKey(String.valueOf(url));
 	}
 
 	public void fireLoadCallback(DownloadRequest request) {
