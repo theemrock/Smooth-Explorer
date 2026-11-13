@@ -11,6 +11,8 @@
 	Strings for OsmAnd core
 	Thx - Hardy
 -->
+	<string name="current_step_remaining_widget_desc">The widget shows the remaining distance and time of the current navigation step. Time is updated during navigation.</string>
+	<string name="map_widget_current_step_remaining">Current step remaining time</string>
 	<string name="smooth_map_mode_name">Map mode</string>
 	<string name="smooth_map_mode_descr">Switches between the offline map, the online map and the online map with traffic</string>
 	<string name="smooth_map_mode_offline">Map mode: offline</string>

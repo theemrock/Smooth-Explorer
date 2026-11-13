@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="current_step_remaining_widget_desc">Widget, mevcut navigasyon adımının kalan mesafesini ve süresini gösterir. Süre navigasyon sırasında güncellenir.</string>
+    <string name="map_widget_current_step_remaining">Mevcut adım kalan süre</string>
     <string name="smooth_map_mode_name">Harita modu</string>
     <string name="smooth_map_mode_descr">Çevrim dışı harita, çevrim içi harita ve trafikli çevrim içi harita arasında geçiş yapar</string>
     <string name="smooth_map_mode_offline">Harita modu: çevrim dışı</string>

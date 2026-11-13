@@ -30,6 +30,7 @@ import static net.osmand.plus.views.mapwidgets.WidgetType.STREET_NAME;
 import static net.osmand.plus.views.mapwidgets.WidgetType.SUNRISE;
 import static net.osmand.plus.views.mapwidgets.WidgetType.SUNSET;
 import static net.osmand.plus.views.mapwidgets.WidgetType.SUN_POSITION;
+import static net.osmand.plus.views.mapwidgets.WidgetType.CURRENT_STEP_REMAINING;
 import static net.osmand.plus.views.mapwidgets.WidgetType.TIME_TO_DESTINATION;
 import static net.osmand.plus.views.mapwidgets.WidgetType.TIME_TO_INTERMEDIATE;
 import static net.osmand.plus.views.mapwidgets.WidgetType.TRUE_BEARING;
@@ -122,6 +123,7 @@ public class WidgetsInitializer {
 		addWidgetInfo(RADIUS_RULER);
 		addWidgetInfo(TIME_TO_INTERMEDIATE);
 		addWidgetInfo(TIME_TO_DESTINATION);
+		addWidgetInfo(CURRENT_STEP_REMAINING);
 		addWidgetInfo(SIDE_MARKER_1);
 		addWidgetInfo(SIDE_MARKER_2);
 		addWidgetInfo(SUNRISE);

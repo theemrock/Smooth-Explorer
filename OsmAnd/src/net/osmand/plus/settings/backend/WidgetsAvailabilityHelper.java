@@ -39,6 +39,7 @@ import static net.osmand.plus.views.mapwidgets.WidgetType.STREET_NAME;
 import static net.osmand.plus.views.mapwidgets.WidgetType.SUNRISE;
 import static net.osmand.plus.views.mapwidgets.WidgetType.SUNSET;
 import static net.osmand.plus.views.mapwidgets.WidgetType.SUN_POSITION;
+import static net.osmand.plus.views.mapwidgets.WidgetType.CURRENT_STEP_REMAINING;
 import static net.osmand.plus.views.mapwidgets.WidgetType.TIME_TO_DESTINATION;
 import static net.osmand.plus.views.mapwidgets.WidgetType.TIME_TO_INTERMEDIATE;
 import static net.osmand.plus.views.mapwidgets.WidgetType.TRUE_BEARING;
@@ -114,6 +115,7 @@ public class WidgetsAvailabilityHelper {
 
 		regWidgetVisibility(CURRENT_SPEED, BICYCLE, BOAT, SKI, PUBLIC_TRANSPORT, AIRCRAFT, HORSE, TRAIN);
 		regWidgetVisibility(MAX_SPEED, none);
+		regWidgetVisibility(CURRENT_STEP_REMAINING, none);
 		regWidgetVisibility(ALTITUDE_MAP_CENTER, PEDESTRIAN, BICYCLE);
 		regWidgetVisibility(ALTITUDE_MY_LOCATION, PEDESTRIAN, BICYCLE);
 
@@ -122,6 +124,7 @@ public class WidgetsAvailabilityHelper {
 		regWidgetAvailability(DISTANCE_TO_DESTINATION, all);
 		regWidgetAvailability(TIME_TO_INTERMEDIATE, all);
 		regWidgetAvailability(TIME_TO_DESTINATION, all);
+		regWidgetAvailability(CURRENT_STEP_REMAINING, all);
 		regWidgetAvailability(CURRENT_SPEED, all);
 		regWidgetAvailability(MAX_SPEED, all);
 		regWidgetAvailability(AVERAGE_SPEED, all);
