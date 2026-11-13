@@ -64,6 +64,6 @@ public class MyLocationButtonState extends MapButtonState {
 	@NonNull
 	@Override
 	protected ButtonPositionSize setupButtonPosition(@NonNull ButtonPositionSize position) {
-		return setupButtonPosition(position, POS_RIGHT, POS_BOTTOM, true, false);
+		return setupButtonPosition(position, POS_RIGHT, POS_BOTTOM, false, true);
 	}
 }

@@ -1,7 +1,7 @@
 package net.osmand.plus.views.mapwidgets.configure.buttons;
 
 import static net.osmand.plus.quickaction.ButtonAppearanceParams.SMALL_SIZE_DP;
-import static net.osmand.shared.grid.ButtonPositionSize.POS_LEFT;
+import static net.osmand.shared.grid.ButtonPositionSize.POS_RIGHT;
 import static net.osmand.shared.grid.ButtonPositionSize.POS_TOP;
 
 import androidx.annotation.NonNull;
@@ -84,6 +84,6 @@ public class MapModeButtonState extends MapButtonState {
 	@NonNull
 	@Override
 	protected ButtonPositionSize setupButtonPosition(@NonNull ButtonPositionSize position) {
-		return setupButtonPosition(position, POS_LEFT, POS_TOP, false, true);
+		return setupButtonPosition(position, POS_RIGHT, POS_TOP, false, true);
 	}
 }

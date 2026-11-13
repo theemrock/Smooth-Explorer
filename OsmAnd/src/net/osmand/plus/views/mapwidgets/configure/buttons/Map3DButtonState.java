@@ -90,7 +90,7 @@ public class Map3DButtonState extends MapButtonState {
 
 	@Override
 	protected void updatePosition(@NonNull @NotNull ButtonPositionSize position) {
-		position.setMarginX(CELL_SIZE_DP);
+		position.setMarginX(0);
 		position.setMarginY(CELL_SIZE_DP);
 		super.updatePosition(position);
 		position.setXMove(!portrait);
@@ -100,6 +100,6 @@ public class Map3DButtonState extends MapButtonState {
 	@NonNull
 	@Override
 	protected ButtonPositionSize setupButtonPosition(@NonNull ButtonPositionSize position) {
-		return setupButtonPosition(position, POS_RIGHT, POS_BOTTOM, true, true);
+		return setupButtonPosition(position, POS_RIGHT, POS_BOTTOM, false, true);
 	}
 }
