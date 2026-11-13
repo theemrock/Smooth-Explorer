@@ -34,20 +34,26 @@ public class CurrentStepRemainingWidgetTest {
 	}
 
 	@Test
-	public void formatDurationUsesMinutesAndSeconds() {
-		assertEquals("0:00", CurrentStepRemainingWidget.formatDuration(0));
-		assertEquals("0:55", CurrentStepRemainingWidget.formatDuration(55));
-		assertEquals("1:30", CurrentStepRemainingWidget.formatDuration(90));
+	public void formatDurationShowsSecondsUpToOneMinute() {
+		assertEquals("0sn", CurrentStepRemainingWidget.formatDuration(0));
+		assertEquals("31sn", CurrentStepRemainingWidget.formatDuration(31));
+		assertEquals("60sn", CurrentStepRemainingWidget.formatDuration(60));
 	}
 
 	@Test
-	public void formatDurationUsesHoursAndMinutesFromOneHour() {
-		assertEquals("1:00", CurrentStepRemainingWidget.formatDuration(3600));
-		assertEquals("1:02", CurrentStepRemainingWidget.formatDuration(3725));
+	public void formatDurationShowsMinutesAboveOneMinute() {
+		assertEquals("1dk", CurrentStepRemainingWidget.formatDuration(61));
+		assertEquals("34dk", CurrentStepRemainingWidget.formatDuration(2054));
+	}
+
+	@Test
+	public void formatDurationShowsHoursAndMinutesFromOneHour() {
+		assertEquals("1S00dk", CurrentStepRemainingWidget.formatDuration(3600));
+		assertEquals("12S34dk", CurrentStepRemainingWidget.formatDuration(12 * 3600 + 34 * 60 + 54));
 	}
 
 	@Test
 	public void formatDurationClampsNegativeToZero() {
-		assertEquals("0:00", CurrentStepRemainingWidget.formatDuration(-5));
+		assertEquals("0sn", CurrentStepRemainingWidget.formatDuration(-5));
 	}
 }

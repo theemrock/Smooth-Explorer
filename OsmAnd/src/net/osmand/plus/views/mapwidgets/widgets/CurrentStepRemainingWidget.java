@@ -52,15 +52,16 @@ public class CurrentStepRemainingWidget extends SimpleWidget {
 	}
 
 	/**
-	 * Formats seconds as m:ss, or h:mm from one hour on.
+	 * Up to 1 min: seconds (31sn). Up to 1 h: minutes (34dk). From 1 h: hours and minutes (12S34dk).
 	 */
 	static String formatDuration(int seconds) {
 		int total = Math.max(0, seconds);
-		int hours = total / 3600;
-		int minutes = (total % 3600) / 60;
-		if (hours > 0) {
-			return String.format("%d:%02d", hours, minutes);
+		if (total <= 60) {
+			return total + "sn";
 		}
-		return String.format("%d:%02d", minutes, total % 60);
+		if (total < 3600) {
+			return (total / 60) + "dk";
+		}
+		return String.format("%dS%02ddk", total / 3600, (total % 3600) / 60);
 	}
 }

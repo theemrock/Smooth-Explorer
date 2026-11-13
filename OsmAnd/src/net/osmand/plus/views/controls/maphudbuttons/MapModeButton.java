@@ -5,10 +5,11 @@ import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import net.osmand.plus.R;
 import net.osmand.plus.plugins.PluginsHelper;
 import net.osmand.plus.plugins.rastermaps.OsmandRasterMapsPlugin;
+import net.osmand.plus.profiles.SelectNavProfileBottomSheet;
+import net.osmand.plus.settings.backend.ApplicationMode;
 import net.osmand.plus.views.mapwidgets.configure.buttons.MapButtonState;
 import net.osmand.plus.views.mapwidgets.configure.buttons.MapModeButtonState;
 
@@ -35,6 +36,14 @@ public class MapModeButton extends MapButton {
 				plugin.cycleMapMode(mapActivity);
 				setInvalidated(true);
 			}
+		});
+		setOnLongClickListener(view -> {
+			if (mapActivity == null) {
+				return false;
+			}
+			ApplicationMode appMode = app.getSettings().getApplicationMode();
+			SelectNavProfileBottomSheet.showInstance(mapActivity, null, appMode, appMode.getRoutingProfile(), false);
+			return true;
 		});
 	}
 

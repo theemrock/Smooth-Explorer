@@ -259,8 +259,12 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 
 	/** The map button: picks the next mode; what is really shown is MapModePolicy's answer for that mode. */
 	public void cycleMapMode(@NonNull MapActivity mapActivity) {
+		setMapMode(mapActivity, getMapModeState().getMode().next());
+	}
+
+	/** Sets the mode the user picked, from the button's cycle or its picker. */
+	public void setMapMode(@NonNull MapActivity mapActivity, @NonNull MapMode next) {
 		MapModeButtonState state = getMapModeState();
-		MapMode next = state.getMode().next();
 		state.setMode(next);
 		if (next != MapMode.OFFLINE && !isEnabled()) {
 			// the layers are created and refreshed by this plugin, so it has to be on for them to show

@@ -600,6 +600,9 @@ public class MapButtonsHelper {
 				return buttonState;
 			}
 		}
+		if (Algorithms.stringsEqual(mapModeButtonState.getId(), id)) {
+			return mapModeButtonState;
+		}
 		return getActionButtonStateById(id);
 	}
 
